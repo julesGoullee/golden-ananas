@@ -1,0 +1,45 @@
+{
+  "display": {
+    "title": "Goldan'anas jump",
+    "favicon": "favicon_asset"
+  },
+  "owner": "0xd50C46607b8C6AaA03c4cd2506e79a5Df2b699bF",
+  "contact": {
+    "name": "goldananas",
+    "email": "goldananas@protonmail.com"
+  },
+  "main": "bin/game.js",
+  "tags": [],
+  "scene": {
+    "parcels": [
+      "-14,-120"
+    ],
+    "base": "-14,-120"
+  },
+  "communications": {
+    "type": "webrtc",
+    "signalling": "https://signalling-01.decentraland.org"
+  },
+  "policy": {
+    "contentRating": "E",
+    "fly": true,
+    "voiceEnabled": true,
+    "blacklist": []
+  },
+  "spawnPoints": [
+    {
+      "name": "spawn1",
+      "default": true,
+      "position": {
+        "x": 10,
+        "y": 0,
+        "z": 0
+      },
+      "cameraTarget": {
+        "x": 8,
+        "y": 1,
+        "z": 8
+      }
+    }
+  ]
+}

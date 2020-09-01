@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outFile": "./bin/game.js",
+    "allowJs": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "./node_modules/decentraland-builder-scripts/types.d.ts",
+    "./node_modules/@types/node"
+  ],
+  "extends": "./node_modules/decentraland-ecs/types/tsconfig.json"
+}
