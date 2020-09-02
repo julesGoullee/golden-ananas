@@ -1,7 +1,7 @@
 import utils from "../../../node_modules/decentraland-ecs-utils/index"
 import Config from "../../config/index";
 
-export default (scene, pivot) => {
+export default (pivot) => {
 
   const camera = Camera.instance
 

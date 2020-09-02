@@ -1,8 +1,8 @@
-export default (scene) => {
+export default (pivot) => {
   const infoSign = new Entity('infoSign')
-  infoSign.setParent(scene)
+  infoSign.setParent(pivot)
   infoSign.addComponentOrReplace(new Transform({
-    position: new Vector3(14.8, 0, 1.2),
+    position: new Vector3(14.6, 0, 1.5),
     rotation: Quaternion.Euler(10, -50, 0),
     scale: new Vector3(1, 1, 1)
   }) )

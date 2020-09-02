@@ -1,8 +1,8 @@
-export default (scene) => {
+export default (pivot) => {
 
   const glasses = new Entity('glasses')
   engine.addEntity(glasses)
-  glasses.setParent(scene)
+  glasses.setParent(pivot)
   glasses.addComponentOrReplace(new Transform({
     position: new Vector3(8, 1.5, 8),
     rotation: new Quaternion(1, 0, 1, 0),

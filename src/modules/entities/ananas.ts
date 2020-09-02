@@ -1,7 +1,7 @@
-export default (scene) => {
+export default (pivot) => {
   const ananas = new Entity('ananas')
   ananas.addComponentOrReplace(new Transform({
-    position: new Vector3(8, 0, 8),
+    position: new Vector3(0, 0, 0),
     scale: new Vector3(0, 0, 0),
   }) )
   const gltfAnanas = new GLTFShape("models/ananas.glb")
@@ -10,6 +10,6 @@ export default (scene) => {
   ananas.addComponentOrReplace(gltfAnanas);
 
   engine.addEntity(ananas)
-  ananas.setParent(scene)
+  ananas.setParent(pivot)
   return ananas
 }

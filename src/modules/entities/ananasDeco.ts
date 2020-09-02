@@ -1,10 +1,10 @@
-export default (scene) => {
+export default (pivot) => {
   const ananasDeco = new Entity('ananasDeco')
-  ananasDeco.setParent(scene)
+  ananasDeco.setParent(pivot)
   ananasDeco.addComponentOrReplace(new Transform({
-    position: new Vector3(-10, 0, 8),
-    // rotation: Quaternion.Euler(10, -50, 0),
-    scale: new Vector3(0.7, 0.7, 0.7)
+    position: new Vector3(8, 0, 8),
+    // rotation: Quaternion.Euler(0, 180, 0),
+    // scale: new Vector3(0.7, 0.7, 0.7)
   }) )
   const gltfInfoSign = new GLTFShape("models/ananasDeco.glb")
   ananasDeco.addComponentOrReplace(gltfInfoSign);

@@ -15,13 +15,14 @@ import getPanneau from "./modules/entities/panneau"
 import getAnanas from "./modules/entities/ananas"
 import getGoldenAnanas from "./modules/entities/goldenAnanas"
 import getDoor from "./modules/entities/door"
-import getThankSign from "./modules/entities/thankSign"
 import getButtonStart from "./modules/entities/buttonStart"
 import getAnanasDeco from "./modules/entities/ananasDeco"
+import getAnanasPlant from "./modules/entities/ananasPlant"
 
 import Level from "./modules/levels/Level";
 import LevelOne from "./modules/levels/one"
 import LevelTwo from "./modules/levels/two";
+import LevelThree from "./modules/levels/three";
 
 class Game {
 
@@ -34,16 +35,20 @@ class Game {
   scoreLevel: number
   interval: NodeJS.Timeout
   isPlaying: boolean
-  isAnanasOpen: boolean
   isDoorOpen: boolean
   isFinishLvl1: boolean
   isFinishLvl2: boolean
+  isFinishLvl3: boolean
   isSubmitScoreLvl1: boolean
   isSubmitScoreLvl2: boolean
+  isSubmitScoreLvl3: boolean
 
   ground: Entity
   infoSign: Entity
   goldenAnanas: Entity
+  ananasPlant: Entity
+  ananas: Entity
+  ananasDecoIndoor: Entity
   door: Entity
   panneau: Entity
   ranks: Entity
@@ -54,6 +59,7 @@ class Game {
   currentLevel: Level
   level1: LevelOne
   level2: LevelTwo
+  level3: LevelThree
 
   constructor() {
 
@@ -64,22 +70,23 @@ class Game {
     this.time = 1
     this.interval = null
     this.isPlaying = false
-    this.isAnanasOpen = false
     this.isDoorOpen = false
     this.isFinishLvl1 = false
     this.isFinishLvl2 = false
+    this.isFinishLvl3 = false
     this.isSubmitScoreLvl1 = false
     this.isSubmitScoreLvl2 = false
+    this.isSubmitScoreLvl3 = false
 
     // Global entities
     this.ground = getGround(scene)
     this.infoSign = getInfoSign(scene)
     this.pivot = getPivot(scene)
-    this.goldenAnanas = getGoldenAnanas(scene, this.pivot)
+    this.ananas = getAnanas(scene)
 
     // Panneau
     this.panneau = getPanneau(scene)
-    this.ranks = getRanks(scene, this.panneau)
+    this.ranks = getRanks(this.panneau)
     this.checkRanks = new CheckRanks(this.ranks.getComponent(TextShape) )
     engine.addSystem(this.checkRanks)
 
@@ -100,34 +107,37 @@ class Game {
     getPlayerScores()
       .then( (resScore: any) => {
 
-        this.buttonStart = getButtonStart(scene, this.pivot)
-        this.platforms = getPlatform(scene, this.pivot)
+        this.buttonStart = getButtonStart(this.pivot)
+        this.platforms = getPlatform(this.pivot)
+
         // if(resScore.levels[0] === 0){
         //
         //   log('Load level 1')
         //   this.startLevel1()
         //
         // } else if(resScore.levels[1] === 0){
+        //
+        //   log('Load level 2')
+        //   this.isFinishLvl1 = true
+        //   this.startLevel2()
 
-          log('Load level 2')
-          this.isAnanasOpen = true
+        // } else if(resScore.levels[2] === 0){
+
+          log('Load level 3')
           this.isFinishLvl1 = true
-          this.startLevel2()
+          this.isFinishLvl2 = true
+          this.startLevel3()
 
         // }
 
       }).catch(error => {
 
       log(error.toString() )
-      this.buttonStart = getButtonStart(scene, this.pivot)
-      this.platforms = getPlatform(scene, this.pivot)
+      this.buttonStart = getButtonStart(this.pivot)
+      this.platforms = getPlatform(this.pivot)
       this.startLevel1()
 
     })
-
-    // this.isAnanasOpen = true
-    // this.isFinishLvl1 = true
-    // this.startLevel2()
 
     engine.addSystem(this)
 
@@ -141,14 +151,10 @@ class Game {
       log('showCloud')
       this.showCloud()
 
-    } else if(this.camera.position.y < Config.userSize){
+    } else if(this.camera.position.y < Config.userSize && this.isPlaying){
 
-      if(this.isPlaying){
-
-        this.currentLevel.reset()
-        this.reset()
-
-      }
+      this.currentLevel.reset()
+      this.reset()
 
     } else if(this.isPlaying){
 
@@ -244,7 +250,21 @@ class Game {
 
   startLevel1(){
 
-    this.level1 = new LevelOne(this.pivot, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel1())
+    if(!this.ananasPlant){
+      this.ananasPlant = getAnanasPlant(scene)
+    }
+
+    if(!this.goldenAnanas){
+
+      this.goldenAnanas = getGoldenAnanas(this.pivot)
+      this.goldenAnanas.addComponentOrReplace(new Transform({
+        position: new Vector3(0, 8, 0),
+        scale: new Vector3(1, 1, 1),
+      }) )
+
+    }
+
+    this.level1 = new LevelOne(this.pivot, this.ananas, this.ananasPlant, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel1())
     this.level1.init()
     this.currentLevel = this.level1
 
@@ -256,7 +276,6 @@ class Game {
       return
     }
 
-    this.isAnanasOpen = true
     this.isFinishLvl1 = true
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
@@ -274,22 +293,38 @@ class Game {
 
   }
 
-  startLevel2(){
+  startLevel2() {
 
-    // this.door = getDoor(scene)
-    const ananasDeco = getAnanasDeco(scene)
-    const ananas = getAnanas(scene)
-    this.goldenAnanas.addComponentOrReplace(new utils.MoveTransformComponent(new Vector3(0, 7, 0), new Vector3(0, 0.5, 0), 3))
-    this.goldenAnanas.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 1, 1), new Vector3(0.1, 0.1, 0.1), 3, () => {
+    if (!this.door) {
 
-      ananas.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(1, 1, 1), 4))
-      // this.door.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(1, 1, 1), 4, () => {
-      //
-      //   this.level2 = new LevelTwo(this.camera, this.pivot, this.buttonStart, this.platforms, this.door, () => this.start(), () => this.finishLevel2() )
-      //   this.level2.init()
-      //   this.currentLevel = this.level2
-      //
-      // }))
+      this.door = getDoor(scene)
+
+    }
+
+    if(this.ananasPlant){
+      this.ananasPlant.addComponentOrReplace(new utils.MoveTransformComponent(this.ananasPlant.getComponent(Transform).position, new Vector3(this.ananasPlant.getComponent(Transform).position.x, -2, this.ananasPlant.getComponent(Transform).position.z), 5))
+      this.ananasPlant.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananasPlant.getComponent(Transform).scale, new Vector3(0, 0, 0), 5))
+    }
+
+    if(this.goldenAnanas){
+      this.goldenAnanas.addComponentOrReplace(new utils.MoveTransformComponent(this.goldenAnanas.getComponent(Transform).position, new Vector3(0, 0, 0), 3) )
+      this.goldenAnanas.addComponentOrReplace(new utils.ScaleTransformComponent(this.goldenAnanas.getComponent(Transform).scale, new Vector3(0, 0, 0), 3) )
+    }
+
+    this.ananas.addComponentOrReplace(new utils.MoveTransformComponent(this.ananas.getComponent(Transform).position, new Vector3(8, 0, 8), 3, () => {
+
+      const ananasInitScale: Vector3 = this.ananas.getComponent(Transform).scale
+      this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(ananasInitScale, new Vector3(1, 1, 1), 4))
+      this.door.addComponentOrReplace(new utils.ScaleTransformComponent(ananasInitScale, new Vector3(1, 1, 1), 4, () => {
+
+        if (!this.ananasDecoIndoor) {
+          this.ananasDecoIndoor = getAnanasDeco(scene)
+        }
+        this.level2 = new LevelTwo(this.camera, this.pivot, this.buttonStart, this.platforms, this.door, () => this.start(), () => this.finishLevel2())
+        this.level2.init()
+        this.currentLevel = this.level2
+
+      }))
 
     }))
 
@@ -331,10 +366,6 @@ class Game {
             })
             this.isDoorOpen = true
 
-            const thanksSign = getThankSign(scene)
-            thanksSign.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(1, 1, 1), 3))
-            thanksSign.addComponentOrReplace(new utils.MoveTransformComponent(new Vector3(8, -10, 11), thanksSign.getComponent(Transform).position, 3) )
-
             this.goldenAnanas.addComponentOrReplace(
               new OnPointerDown(
                 e => {
@@ -366,6 +397,22 @@ class Game {
         }
       )
     )
+  }
+
+  startLevel3(){
+
+    if(!this.ananasDecoIndoor){
+      this.ananasDecoIndoor = getAnanasDeco(scene)
+    }
+
+    this.level3 = new LevelThree(this.pivot, this.ananas, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel3() )
+    this.level3.init()
+    this.currentLevel = this.level3
+
+  }
+
+  finishLevel3(){
+
   }
 
 }

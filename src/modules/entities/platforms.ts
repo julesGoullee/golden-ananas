@@ -1,4 +1,4 @@
-export default (scene, pivot) => {
+export default (pivot) => {
   const platforms = []
 
   const platform1 = new Entity('platform1')

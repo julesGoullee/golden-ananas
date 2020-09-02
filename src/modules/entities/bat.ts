@@ -1,4 +1,4 @@
-export default (scene) => {
+export default (pivot) => {
   const bat = new Entity('bat')
   const batOriginPosition = new Vector3(8, 1, 8)
   bat.addComponentOrReplace(new Transform({
@@ -12,7 +12,7 @@ export default (scene) => {
   bat.addComponentOrReplace(gltfBat);
 
   engine.addEntity(bat)
-  bat.setParent(scene)
+  bat.setParent(pivot)
 
   class SimpleRotate implements ISystem {
     update() {

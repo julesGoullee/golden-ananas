@@ -1,6 +1,6 @@
 import utils from "../../../node_modules/decentraland-ecs-utils/index"
 
-export default (scene, pivot) => {
+export default (pivot) => {
 
   const camera = Camera.instance
   const pivotLocal = new Entity('buttonEndPivotLocal')

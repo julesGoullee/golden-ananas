@@ -1,4 +1,4 @@
-export default (scene) => {
+export default (pivot) => {
   const fleche = new Entity('fleche')
   fleche.addComponentOrReplace(new Transform({
     position: new Vector3(0, 0, 4),
@@ -9,6 +9,6 @@ export default (scene) => {
   fleche.addComponentOrReplace(gltfFleche);
 
   engine.addEntity(fleche)
-  fleche.setParent(scene)
+  fleche.setParent(pivot)
   return fleche
 }

@@ -1,7 +1,7 @@
-export default (scene) => {
+export default (pivot) => {
   const ground = new Entity('ground')
   engine.addEntity(ground)
-  ground.setParent(scene)
+  ground.setParent(pivot)
   ground.addComponentOrReplace(new GLTFShape("models/FloorBaseGrass.glb"))
   ground.addComponentOrReplace(new Transform({
     position: new Vector3(8, 0, 8),

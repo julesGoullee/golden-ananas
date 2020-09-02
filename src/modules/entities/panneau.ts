@@ -1,6 +1,6 @@
-export default (scene) => {
+export default (pivot) => {
   const panneau = new Entity('panneau')
-  panneau.setParent(scene)
+  panneau.setParent(pivot)
   panneau.addComponentOrReplace(new Transform({
     position: new Vector3(2.4, 0, 2.4),
     rotation: new Quaternion(0, 0.4, 0, 1),

@@ -1,31 +1,43 @@
-import scene from "../scene"
 import utils from "../../../node_modules/decentraland-ecs-utils/index"
 import getButtonEnd from "../entities/buttonEnd"
 import Level from "./Level";
 
 export default class LevelOne implements Level {
   pivot: Entity
+  ananas: Entity
+  ananasPlant: Entity
   buttonStart: Entity
   buttonEnd: Entity
   platforms: Entity[]
   onStart: Function
   onEnd: Function
 
-  constructor(pivot, buttonStart, platforms, onStart, onEnd) {
+  constructor(pivot, ananas, ananasPlant, buttonStart, platforms, onStart, onEnd) {
 
     this.pivot = pivot
+    this.ananas = ananas
+    this.ananasPlant = ananasPlant
     this.buttonStart = buttonStart
     this.platforms = platforms
     this.onEnd = onEnd
     this.onStart = onStart
-    this.buttonEnd = getButtonEnd(scene, this.pivot)
+    this.buttonEnd = getButtonEnd(this.pivot)
 
   }
 
   init() {
 
-    this.pivot.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 45, 0)))
+    this.ananas.addComponentOrReplace(new Transform({
+      position: new Vector3(8.3, 2, 7.9),
+      scale: new Vector3(0.05, 0.05, 0.05),
+    }) )
 
+    this.ananasPlant.addComponentOrReplace(new Transform({
+      position: new Vector3(8, 0, 8),
+      scale: new Vector3(0.5, 0.5, 0.5),
+    }) )
+
+    this.pivot.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 45, 0)))
     this.buttonStart.addComponentOrReplace(
       new OnPointerDown(
         e => {

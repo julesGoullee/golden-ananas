@@ -1,4 +1,4 @@
-export default (scene, panneau) => {
+export default (panneau) => {
 
   const ranks = new Entity('ranks')
   ranks.setParent(panneau)
@@ -9,7 +9,7 @@ export default (scene, panneau) => {
 
   ranks.addComponentOrReplace(
     new Transform({
-      position: new Vector3(-2, 7, -0.5),
+      position: new Vector3(-1.5, 6.5, -0.2),
       rotation: new Quaternion(0, 0, 0, 0),
       scale: new Vector3(1, 1, 1)
     })

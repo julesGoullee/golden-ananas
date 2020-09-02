@@ -1,8 +1,8 @@
-export default (scene) => {
+export default (pivot) => {
 
   const crater = new Entity('crater')
   engine.addEntity(crater)
-  crater.setParent(scene)
+  crater.setParent(pivot)
   const transform3 = new Transform({
     position: new Vector3(8, 0, 8),
     rotation: new Quaternion(0, 0, 0, 1),

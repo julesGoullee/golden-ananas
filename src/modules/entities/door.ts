@@ -1,4 +1,4 @@
-export default (scene) => {
+export default (pivot) => {
   // const door = new Entity('door')
   // door.addComponentOrReplace(new Transform({
   //   position: new Vector3(8, 0, 8),
@@ -48,7 +48,7 @@ export default (scene) => {
   })
 
   engine.addEntity(lock)
-  lock.setParent(scene)
+  lock.setParent(pivot)
 
   return lock
 }
