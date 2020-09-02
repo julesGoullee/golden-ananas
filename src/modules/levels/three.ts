@@ -101,7 +101,7 @@ export default class LevelThree implements Level {
   fallDown(platform, i){
 
     const position: Vector3 = platform.getComponent(Transform).position.clone()
-    platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(1, 1, 1), 0.5) )
+    platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0.9, 0.9, 0.9), 0.5) )
 
     platform.addComponentOrReplace(new utils.MoveTransformComponent(position, new Vector3(position.x, -1, position.z), i, () => {
 
@@ -127,12 +127,12 @@ export default class LevelThree implements Level {
 
   reset(){
 
-    // this.failing = false
-    //
-    // this.platforms.slice(1, -1).forEach( (platform, i) =>  platform.addComponentOrReplace(new Transform({
-    //   position: Level.platformsPositions[i].clone(),
-    //   scale: new Vector3(0, 0, 0)
-    // }) ))
+    this.failing = false
+
+    this.platforms.forEach( (platform, i) => {
+      platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0.9, 0.9, 0.9), 0.5) )
+      platform.addComponentOrReplace(new utils.MoveTransformComponent(platform.getComponent(Transform).position, new Vector3(platform.getComponent(Transform).position.x, i + 1, platform.getComponent(Transform).position.z), 0.5) )
+    })
 
   }
 

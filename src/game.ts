@@ -120,7 +120,7 @@ class Game {
         //   log('Load level 2')
         //   this.isFinishLvl1 = true
         //   this.startLevel2()
-
+        //
         // } else if(resScore.levels[2] === 0){
 
           log('Load level 3')
@@ -174,7 +174,7 @@ class Game {
     this.platforms.slice(1).map(platform => {
 
       if(platform.getComponent(Transform).scale.x === 0){
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.7) )
+        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(0.9, 0.9, 0.9), 0.7) )
       }
       platform.getComponent(GLTFShape).visible = true
       // platform.getComponent(Transform).lookAt(this.camera.position)
@@ -188,7 +188,7 @@ class Game {
 
       if(platform.getComponent(Transform).scale.x === 1){
 
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.5, () => {
+        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0.9, 0.9, 0.9), new Vector3(0, 0, 0), 0.5, () => {
           platform.getComponent(GLTFShape).visible = false
 
         }) )

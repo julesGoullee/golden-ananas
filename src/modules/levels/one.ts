@@ -94,7 +94,7 @@ export default class LevelOne implements Level {
     this.platforms.slice(1).map(platform => {
 
       if(platform.getComponent(Transform).scale.x === 0){
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.7) )
+        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(0.9, 0.9, 0.9), 0.7) )
       }
       platform.getComponent(GLTFShape).visible = true
     })
@@ -105,9 +105,9 @@ export default class LevelOne implements Level {
 
     this.platforms.slice(1).map(platform => {
 
-      if(platform.getComponent(Transform).scale.x === 1){
+      if(platform.getComponent(Transform).scale.x === 0.9){
 
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.5, () => {
+        platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
           platform.getComponent(GLTFShape).visible = false
 
         }) )
