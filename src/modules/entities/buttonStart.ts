@@ -8,7 +8,7 @@ export default (pivot) => {
   const pivotLocal = new Entity('buttonStartPivotLocal')
   pivotLocal.setParent(pivot)
   pivotLocal.addComponentOrReplace(new Transform({
-    position: new Vector3(5, 1.3, -1),
+    position: new Vector3(4, 1.3, 4),
     rotation: new Quaternion(0, 1, 0, 1),
     scale: new Vector3(1, 1, 1)
   }))

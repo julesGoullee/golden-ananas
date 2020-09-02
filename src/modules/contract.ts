@@ -90,5 +90,6 @@ export async function getPlayerScores() {
 
 export default {
   getTopRanksData,
+  getPlayerScores,
   submitScore
 }

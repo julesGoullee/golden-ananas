@@ -14,7 +14,6 @@ export default class LevelTwo implements Level {
   onStart: Function
   onEnd: Function
   platformsDelay: number
-  platformsPositions: Vector3[]
 
   constructor(camera, pivot, buttonStart, platforms, door, onStart, onEnd) {
 
@@ -28,17 +27,6 @@ export default class LevelTwo implements Level {
     this.onStart = onStart
 
     this.platformsDelay = 1000;
-    this.platformsPositions = [
-      new Vector3(6.2, 1, 0),
-      new Vector3(4, 2,  -4.2),
-      new Vector3(0, 3,  -6.3),
-      new Vector3(-3.5, 4,  -4),
-      new Vector3(-5, 5,  0),
-      new Vector3(-3.5, 6,  4),
-      new Vector3(0, 7,  6),
-      new Vector3(4, 8,  4),
-      new Vector3(6, 9,  0)
-    ]
 
     this.door.addComponentOrReplace(
       new OnPointerDown(() => {},{
@@ -154,9 +142,9 @@ export default class LevelTwo implements Level {
           platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.5, () => {
             platform.getComponent(GLTFShape).visible = false
 
-            if(platform.getComponent(Transform).position.y !== this.platformsPositions[i].y) {
+            if(platform.getComponent(Transform).position.y !== i + 1) {
 
-              platform.addComponentOrReplace(new utils.MoveTransformComponent(platform.getComponent(Transform).position, this.platformsPositions[i].clone(), 0.5) )
+              platform.addComponentOrReplace(new utils.MoveTransformComponent(platform.getComponent(Transform).position, new Vector3(platform.getComponent(Transform).position.x, i + 1, platform.getComponent(Transform).position.z), 0.5) )
 
             }
 

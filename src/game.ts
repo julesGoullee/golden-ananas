@@ -146,7 +146,7 @@ class Game {
   update() {
 
     if( (this.camera.position.x < 0 || this.camera.position.z < 0 ||
-      this.camera.position.x > 18 || this.camera.position.z > 18) && !this.isFinishLvl1 && !this.isFinishLvl1){
+      this.camera.position.x > 18 || this.camera.position.z > 18) && !this.isFinishLvl1 && !this.isFinishLvl2){
 
       log('showCloud')
       this.showCloud()
@@ -177,6 +177,7 @@ class Game {
         platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(1, 1, 1), 0.7) )
       }
       platform.getComponent(GLTFShape).visible = true
+      // platform.getComponent(Transform).lookAt(this.camera.position)
     })
 
   }
