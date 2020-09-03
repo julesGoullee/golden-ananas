@@ -1,19 +1,15 @@
-import {getProvider} from "@decentraland/web3-provider"
-import * as EthConnect from "../../node_modules/eth-connect/esm"
+import {getContract } from '../../node_modules/@dcl/crypto-utils/utils/contract'
 import {getUserAccount} from "@decentraland/EthereumController"
 import Config from "../config/index"
 import abiGoldAnanas from "../abi/goldAnanas"
 
-//http://127.0.0.1:8000/?ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-14%2C-120
+//http://127.0.0.1:8000/?ENABLE_WEB3&DEBUG&SCENE_DEBUG_PANEL&position=-13%2C-121&realm=localhost-stub
 export function submitScore (level, score) {
 
   return executeTask(async () => {
     try {
-      const provider = await getProvider()
-      const requestManager = new EthConnect.RequestManager(provider)
-      const factory = new EthConnect.ContractFactory(requestManager, abiGoldAnanas)
       const address = await getUserAccount()
-      const contract = (await factory.at(Config.contracts.goldenAnanas)) as any
+      const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldAnanas) as any
       const res = await contract.setScore(
         level,
         score,
@@ -34,11 +30,8 @@ export async function getTopRanksData() {
 
     try {
       return executeTask(async () => {
-        const provider = await getProvider()
-        const requestManager = new EthConnect.RequestManager(provider)
-        const factory = new EthConnect.ContractFactory(requestManager, abiGoldAnanas)
         const address = await getUserAccount()
-        const contract = (await factory.at(Config.contracts.goldenAnanas)) as any
+        const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldAnanas) as any
         const res = await contract.getRanks({
           from: address
         })
@@ -59,11 +52,9 @@ export async function getPlayerScores() {
 
   try {
     return executeTask(async () => {
-      const provider = await getProvider()
-      const requestManager = new EthConnect.RequestManager(provider)
-      const factory = new EthConnect.ContractFactory(requestManager, abiGoldAnanas)
+
       const address = await getUserAccount()
-      const contract = (await factory.at(Config.contracts.goldenAnanas) ) as any
+      const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldAnanas) as any
       const resScore = await contract.getScore({ from: address })
 
       const levels = []
