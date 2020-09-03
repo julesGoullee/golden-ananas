@@ -10,7 +10,6 @@ export default (pivot) => {
   pivotLocal.addComponentOrReplace(new Transform({
     position: new Vector3(4, 1.3, 4),
     rotation: new Quaternion(0, 1, 0, 1),
-    scale: new Vector3(1, 1, 1)
   }))
 
   class PivotRotate implements ISystem {
@@ -41,7 +40,8 @@ export default (pivot) => {
 
   buttonStart.addComponentOrReplace(
     new Transform({
-      position: new Vector3(0, 1, 0)
+      position: new Vector3(0, 1, 0),
+      scale: new Vector3(0, 0, 0)
     })
   )
   const gltfButton = new GLTFShape("models/bouton.glb")

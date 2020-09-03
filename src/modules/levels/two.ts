@@ -40,6 +40,7 @@ export default class LevelTwo implements Level {
 
   init(){
 
+    this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 0.5) )
     this.buttonStart.addComponentOrReplace(
       new OnPointerDown(
         e => {

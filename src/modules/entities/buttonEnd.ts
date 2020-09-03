@@ -6,7 +6,7 @@ export default (pivot) => {
   const pivotLocal = new Entity('buttonEndPivotLocal')
   pivotLocal.setParent(pivot)
   pivotLocal.addComponentOrReplace(new Transform({
-    position: new Vector3(5, 10, 0),
+    position: new Vector3(5, 11, 0),
     rotation: Quaternion.Euler(0, -90, 0),
     scale: new Vector3(1, 1, 1)
   }))

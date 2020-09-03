@@ -1,13 +1,15 @@
 import utils from "../node_modules/decentraland-ecs-utils/index"
+import * as ui from '../node_modules/@dcl/ui-utils/index'
+import { PromptStyles, ButtonStyles } from "../node_modules/@dcl/ui-utils/utils/types"
 import Config from "./config/index"
 
 import scene from "./modules/scene"
 import CheckRanks from "./modules/checkRanks"
+import { getPlayerScores, submitScore } from "./modules/contract"
+import Timer from "./modules/timer"
 import getRanks from "./modules/ranks"
 import getPivot from "./modules/pivot"
-import getTimer from "./modules/timer"
 import getScore from "./modules/score"
-import { getPlayerScores, submitScore } from "./modules/contract"
 import getGround from "./modules/entities/ground"
 import getPlatform from "./modules/entities/platforms"
 import getInfoSign from "./modules/entities/infoSign"
@@ -29,11 +31,12 @@ class Game {
   camera: Camera
 
   pivot: Entity
-  timer: UIText
+  timer: Timer
   score: UIText
   time: number
   scoreLevel: number
   interval: NodeJS.Timeout
+  sawWelcomeMessage: boolean
   isPlaying: boolean
   isDoorOpen: boolean
   isFinishLvl1: boolean
@@ -64,11 +67,12 @@ class Game {
   constructor() {
 
     this.camera = Camera.instance
-    this.timer = getTimer()
+    this.timer = new Timer()
     this.score = getScore()
 
     this.time = 1
     this.interval = null
+    this.sawWelcomeMessage = true
     this.isPlaying = false
     this.isDoorOpen = false
     this.isFinishLvl1 = false
@@ -113,6 +117,7 @@ class Game {
         // if(resScore.levels[0] === 0){
         //
         //   log('Load level 1')
+        //   this.sawWelcomeMessage = false
         //   this.startLevel1()
         //
         // } else if(resScore.levels[1] === 0){
@@ -148,7 +153,6 @@ class Game {
     if( (this.camera.position.x < 0 || this.camera.position.z < 0 ||
       this.camera.position.x > 18 || this.camera.position.z > 18) && !this.isFinishLvl1 && !this.isFinishLvl2){
 
-      log('showCloud')
       this.showCloud()
 
     } else if(this.camera.position.y < Config.userSize && this.isPlaying){
@@ -160,9 +164,35 @@ class Game {
 
       this.currentLevel.update()
 
-    } else if(!this.isFinishLvl1){
+    } else {
 
       this.hideCloud()
+
+      if(!this.sawWelcomeMessage){
+
+        this.sawWelcomeMessage = true;
+        const prompt = new ui.CustomPrompt(PromptStyles.DARKLARGE, 500, 400)
+        prompt.addText('Welcome to the Golden Ananas Challenge!', 0, 140, Color4.White(), 20)
+        const content = prompt.addText(`Your goal is to retrieve the holy pineapple as
+quickly as possible by using the platforms available
+to you! 
+
+So ready?
+Get on the first platform and click on the button to
+start playing.`, -140, -50)
+        content.text.hTextAlign = 'left'
+        prompt.addButton(
+          `Go!`,
+          0,
+          -150,
+          () => {
+            log('Yes')
+            prompt.close()
+          },
+          ButtonStyles.E
+        )
+
+      }
 
     }
 
@@ -170,6 +200,7 @@ class Game {
 
   showCloud(){
 
+    log('showCloud')
     this.platforms[0].getComponent(GLTFShape).visible = true
     this.platforms.slice(1).map(platform => {
 
@@ -184,9 +215,10 @@ class Game {
 
   hideCloud(){
 
+    log('hideCloud')
     this.platforms.slice(1).map(platform => {
 
-      if(platform.getComponent(Transform).scale.x === 1){
+      if(platform.getComponent(Transform).scale.x === 0.9){
 
         platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0.9, 0.9, 0.9), new Vector3(0, 0, 0), 0.5, () => {
           platform.getComponent(GLTFShape).visible = false
@@ -215,7 +247,7 @@ class Game {
       clearInterval(this.interval)
     }
 
-    this.timer.value = ''
+    this.timer.reset()
     this.score.value = ''
 
     this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 3))
@@ -233,13 +265,14 @@ class Game {
     }
 
     this.time = 0
-    this.timer.value = '0'
+    this.timer.setValue('')
+    this.timer.show()
     this.score.value = ''
 
     this.interval = setInterval( () => {
 
       this.time += 0.01
-      this.timer.value = this.time.toFixed(2)
+      this.timer.setValue(this.time.toFixed(2) )
 
     }, 10)
 
@@ -264,6 +297,7 @@ class Game {
       }) )
 
     }
+    this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 0.5) )
 
     this.level1 = new LevelOne(this.pivot, this.ananas, this.ananasPlant, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel1())
     this.level1.init()
@@ -281,16 +315,34 @@ class Game {
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
 
-    this.score.value = `Congrats! You done this first level in ${this.scoreLevel} seconds`
-
-    if(!this.isSubmitScoreLvl1 && (this.checkRanks.scores.levels[0] == 0 || this.checkRanks.scores.levels[0] > this.scoreLevel) ){
-      this.isSubmitScoreLvl1 = true
-
-      submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) ).then(res => {})
-
+    const onFinish = () => {
+      prompt.close()
+      movePlayerTo({ x: 8, y: 0, z: 1 }, { x: 8, y: 2, z: 8 })
+      this.startLevel2()
     }
 
-    this.startLevel2()
+    const prompt = new ui.OptionPrompt(
+      `Congrats! You done this first level in ${this.scoreLevel} seconds`,
+      'Do you want to save your progression?',
+      () => {
+
+        log(`accept`)
+
+        if(!this.isSubmitScoreLvl1 && (this.checkRanks.scores.levels[0] == 0 || this.checkRanks.scores.levels[0] > this.scoreLevel) ){
+          this.isSubmitScoreLvl1 = true
+
+          submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) ).then(res => {})
+
+        }
+        onFinish()
+      },
+      () => {
+        log(`reject`)
+        onFinish()
+      },
+      'Ok',
+      'No'
+    )
 
   }
 
@@ -318,12 +370,12 @@ class Game {
       this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(ananasInitScale, new Vector3(1, 1, 1), 4))
       this.door.addComponentOrReplace(new utils.ScaleTransformComponent(ananasInitScale, new Vector3(1, 1, 1), 4, () => {
 
-        if (!this.ananasDecoIndoor) {
-          this.ananasDecoIndoor = getAnanasDeco(scene)
-        }
         this.level2 = new LevelTwo(this.camera, this.pivot, this.buttonStart, this.platforms, this.door, () => this.start(), () => this.finishLevel2())
         this.level2.init()
         this.currentLevel = this.level2
+        if (!this.ananasDecoIndoor) {
+          this.ananasDecoIndoor = getAnanasDeco(scene)
+        }
 
       }))
 

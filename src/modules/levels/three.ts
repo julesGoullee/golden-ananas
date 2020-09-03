@@ -36,7 +36,9 @@ export default class LevelThree implements Level {
 
     this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananas.getComponent(Transform).scale, new Vector3(1, 1, 1), 4, () => {
 
+      this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 0.5) )
       this.pivot.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 36, 0) ) )
+
       this.buttonStart.addComponentOrReplace(
         new OnPointerDown(
           e => {
