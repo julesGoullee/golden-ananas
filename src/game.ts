@@ -4,8 +4,8 @@ import { PromptStyles, ButtonStyles } from "../node_modules/@dcl/ui-utils/utils/
 import Config from "./config/index"
 
 import scene from "./modules/scene"
-import CheckRanks from "./modules/checkRanks"
-import { getPlayerScores, submitScore } from "./modules/contract"
+import DisplayScores from "./modules/displayScores"
+import { submitScore } from "./modules/contract"
 import Timer from "./modules/timer"
 import getRanks from "./modules/ranks"
 import getPivot from "./modules/pivot"
@@ -55,7 +55,7 @@ class Game {
   door: Entity
   panneau: Entity
   ranks: Entity
-  checkRanks: CheckRanks
+  displayScores: DisplayScores
 
   buttonStart: Entity
   platforms: Entity[]
@@ -91,13 +91,16 @@ class Game {
     // Panneau
     this.panneau = getPanneau(scene)
     this.ranks = getRanks(this.panneau)
-    this.checkRanks = new CheckRanks(this.ranks.getComponent(TextShape) )
-    engine.addSystem(this.checkRanks)
+    const userScores = new Entity('userScores')
+    userScores.setParent(scene)
+    this.displayScores = new DisplayScores(this.ranks.getComponent(TextShape), userScores)
+
+    engine.addSystem(this.displayScores)
 
     this.panneau.addComponentOrReplace(
       new OnPointerDown(
         e => {
-          this.checkRanks.refreshData()
+          this.displayScores.refreshData()
         },
         {
           button: ActionButton.POINTER,
@@ -108,32 +111,32 @@ class Game {
     )
 
     // Levels
-    getPlayerScores()
+    this.displayScores.getPlayerScores()
       .then( (resScore: any) => {
 
         this.buttonStart = getButtonStart(this.pivot)
         this.platforms = getPlatform(this.pivot)
 
-        // if(resScore.levels[0] === 0){
-        //
-        //   log('Load level 1')
-        //   this.sawWelcomeMessage = false
-        //   this.startLevel1()
-        //
-        // } else if(resScore.levels[1] === 0){
-        //
-        //   log('Load level 2')
-        //   this.isFinishLvl1 = true
-        //   this.startLevel2()
-        //
-        // } else if(resScore.levels[2] === 0){
+        if(resScore.levels[0] === 0){
+
+          log('Load level 1')
+          this.sawWelcomeMessage = false
+          this.startLevel1()
+
+        } else if(resScore.levels[1] === 0){
+
+          log('Load level 2')
+          this.isFinishLvl1 = true
+          this.startLevel2()
+
+        } else if(resScore.levels[2] === 0){
 
           log('Load level 3')
           this.isFinishLvl1 = true
           this.isFinishLvl2 = true
           this.startLevel3()
 
-        // }
+        }
 
       }).catch(error => {
 
@@ -328,10 +331,10 @@ start playing.`, -140, -50)
 
         log(`accept`)
 
-        if(!this.isSubmitScoreLvl1 && (this.checkRanks.scores.levels[0] == 0 || this.checkRanks.scores.levels[0] > this.scoreLevel) ){
+        if(!this.isSubmitScoreLvl1 && (this.displayScores.scores.levels[0] == 0 || this.displayScores.scores.levels[0] > this.scoreLevel) ){
           this.isSubmitScoreLvl1 = true
 
-          submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) ).then(res => {})
+          submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) ).then( (res) => this.displayScores.refreshData() )
 
         }
         onFinish()
@@ -376,6 +379,7 @@ start playing.`, -140, -50)
         if (!this.ananasDecoIndoor) {
           this.ananasDecoIndoor = getAnanasDeco(scene)
         }
+        this.displayScores.displayUserScores()
 
       }))
 
@@ -423,7 +427,7 @@ start playing.`, -140, -50)
               new OnPointerDown(
                 e => {
 
-                  if(!this.isSubmitScoreLvl2 && (this.checkRanks.scores.levels[1] == 0 || this.checkRanks.scores.levels[1] > this.scoreLevel)){
+                  if(!this.isSubmitScoreLvl2 && (this.displayScores.scores.levels[1] == 0 || this.displayScores.scores.levels[1] > this.scoreLevel)){
 
                     this.isSubmitScoreLvl2 = true
 
@@ -457,6 +461,7 @@ start playing.`, -140, -50)
     if(!this.ananasDecoIndoor){
       this.ananasDecoIndoor = getAnanasDeco(scene)
     }
+    this.displayScores.displayUserScores()
 
     this.level3 = new LevelThree(this.pivot, this.ananas, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel3() )
     this.level3.init()
