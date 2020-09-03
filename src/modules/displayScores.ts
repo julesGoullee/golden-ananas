@@ -46,8 +46,8 @@ export default class DisplayScores implements ISystem {
     }
 
     let userScoresTextContent = 'Your Score\n\n'
-    userScoresTextContent += `${this.scores.levels[0]}\n\n`
-    userScoresTextContent += 'Level         Score'
+    userScoresTextContent += `${this.scores.global}\n\n`
+    userScoresTextContent += 'Level         Time'
 
     for (let i = 0; i < this.scores.levels.length; i++){
 

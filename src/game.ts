@@ -9,7 +9,6 @@ import { submitScore } from "./modules/contract"
 import Timer from "./modules/timer"
 import getRanks from "./modules/ranks"
 import getPivot from "./modules/pivot"
-import getScore from "./modules/score"
 import getGround from "./modules/entities/ground"
 import getPlatform from "./modules/entities/platforms"
 import getInfoSign from "./modules/entities/infoSign"
@@ -32,7 +31,6 @@ class Game {
 
   pivot: Entity
   timer: Timer
-  score: UIText
   time: number
   scoreLevel: number
   interval: NodeJS.Timeout
@@ -68,7 +66,6 @@ class Game {
 
     this.camera = Camera.instance
     this.timer = new Timer()
-    this.score = getScore()
 
     this.time = 1
     this.interval = null
@@ -251,7 +248,6 @@ start playing.`, -140, -50)
     }
 
     this.timer.reset()
-    this.score.value = ''
 
     this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 3))
 
@@ -270,7 +266,6 @@ start playing.`, -140, -50)
     this.time = 0
     this.timer.setValue('')
     this.timer.show()
-    this.score.value = ''
 
     this.interval = setInterval( () => {
 
@@ -334,7 +329,8 @@ start playing.`, -140, -50)
         if(!this.isSubmitScoreLvl1 && (this.displayScores.scores.levels[0] == 0 || this.displayScores.scores.levels[0] > this.scoreLevel) ){
           this.isSubmitScoreLvl1 = true
 
-          submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) ).then( (res) => this.displayScores.refreshData() )
+          submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) )
+            .then( (res) => this.displayScores.refreshData() )
 
         }
         onFinish()
@@ -396,64 +392,73 @@ start playing.`, -140, -50)
     this.isFinishLvl2 = true
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
-    this.score.value = `Congrats! You done the second level in ${this.scoreLevel} seconds`
 
-    this.door.addComponentOrReplace(
-      new OnPointerDown(
-        e => {
+    const onFinish = () => {
+      prompt.close()
+      movePlayerTo({ x: 8, y: 0, z: 1 }, { x: 8, y: 2, z: 8 })
+      this.door.addComponentOrReplace(
+        new OnPointerDown(
+          e => {
 
-          if(!this.isDoorOpen){
+            if(!this.isDoorOpen){
 
-            [
-              'porte_colliderAction',
-              'porteAction',
-              'porte2_colliderAction',
-              'plancheAction',
-              'cubeAction2',
-              'cubeAction',
-              'keyAction.005',
-              'lockAction1',
-              'lockAction2',
-              'keyAction',
-            ].forEach(animationName => {
+              [
+                'porte_colliderAction',
+                'porteAction',
+                'porte2_colliderAction',
+                'plancheAction',
+                'cubeAction2',
+                'cubeAction',
+                'keyAction.005',
+                'lockAction1',
+                'lockAction2',
+                'keyAction',
+              ].forEach(animationName => {
 
-              this.door.getComponent(Animator).getClip(animationName).reset()
-              this.door.getComponent(Animator).getClip(animationName).play()
+                this.door.getComponent(Animator).getClip(animationName).reset()
+                this.door.getComponent(Animator).getClip(animationName).play()
 
-            })
-            this.isDoorOpen = true
+              })
+              this.isDoorOpen = true
 
-            this.goldenAnanas.addComponentOrReplace(
-              new OnPointerDown(
-                e => {
+            }
 
-                  if(!this.isSubmitScoreLvl2 && (this.displayScores.scores.levels[1] == 0 || this.displayScores.scores.levels[1] > this.scoreLevel)){
-
-                    this.isSubmitScoreLvl2 = true
-
-                    submitScore(1, (this.time * 100).toFixed(0) ).then(res => {})
-
-                  }
-
-                },
-                {
-                  button: ActionButton.POINTER,
-                  hoverText: 'Submit your score and became contributor!',
-                  distance: 8
-                }
-              )
-            )
-
+          },
+          {
+            button: ActionButton.POINTER,
+            hoverText: 'Unlock!',
+            distance: 8
           }
-
-        },
-        {
-          button: ActionButton.POINTER,
-          hoverText: 'Unlock!',
-          distance: 8
-        }
+        )
       )
+    }
+
+    const prompt = new ui.OptionPrompt(
+      `Congrats! You done the second level in ${this.scoreLevel} seconds`,
+      'Do you want to save your progression?',
+      () => {
+
+        log(`accept`)
+
+        if(!this.isSubmitScoreLvl2 && (this.displayScores.scores.levels[1] == 0 || this.displayScores.scores.levels[1] > this.scoreLevel)){
+
+          this.isSubmitScoreLvl2 = true
+
+          submitScore(1, (this.time * 100).toFixed(0) )
+            .then( (res) => this.displayScores.refreshData() )
+            .then( () => this.displayScores.displayUserScores() )
+
+        }
+        onFinish()
+      },
+      () => {
+        log(`reject`)
+        onFinish()
+      },
+      'Ok',
+      'No'
     )
+
   }
 
   startLevel3(){
