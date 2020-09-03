@@ -15,7 +15,7 @@ Try to reach the highest level and win the most glossy pineapple!
 
 ##### Play in standalone on Ethereum ropsten testnet
 
-[https://goldananas.netlify.app/?ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-14%2C-120](https://goldananas.netlify.app/?ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-14%2C-120)
+[https://goldananas.netlify.app](https://goldananas.netlify.app/?ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-14%2C-120)
 
 
 Models by [@ninja-fire](https://github.com/ninja-fire)
