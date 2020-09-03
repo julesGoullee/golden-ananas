@@ -16,9 +16,9 @@
   "dependencies": {
     "@dcl/ui-utils": "^1.1.0",
     "@types/node": "^14.6.3",
-    "decentraland": "^3.4.4",
+    "decentraland": "^3.4.4-20200903135831.commit-46acf59",
     "decentraland-builder-scripts": "^0.24.0",
-    "decentraland-ecs": "^6.5.0",
+    "decentraland-ecs": "^6.5.1-20200903143346.commit-cfddcaa",
     "decentraland-ecs-utils": "^1.1.4",
     "eth-connect": "^4.0.2"
   },
