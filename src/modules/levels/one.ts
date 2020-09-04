@@ -60,6 +60,8 @@ export default class LevelOne implements Level {
           this.buttonEnd.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonEnd.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
 
             this.pivot.getComponent(utils.KeepRotatingComponent).stop()
+            this.pivot.addComponentOrReplace(new utils.RotateTransformComponent(this.pivot.getComponent(Transform).rotation, Quaternion.Euler(0, 90, 0), 0.5) )
+
             this.platforms.slice(1, -1).map(platform => {
 
               platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.7, () => {

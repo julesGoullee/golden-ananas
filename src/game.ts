@@ -484,7 +484,7 @@ ananhouse.`,
                 ]
                 dialogWindow.openDialogWindow(NPCTalk, 0)
 
-              }, 7000)
+              }, 6500)
 
             }
 
