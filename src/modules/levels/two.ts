@@ -1,5 +1,6 @@
 import utils from "../../../node_modules/decentraland-ecs-utils/index"
-import getButtonEndKey from "../entities/buttonEndKey";
+import * as Utils from "../utils"
+import getButtonEndKey from "../entities/buttonEndKey"
 import Level from "./Level";
 import Config from "../../config/index"
 
@@ -107,7 +108,7 @@ export default class LevelTwo implements Level {
       if(this.camera.position.y > platform.getComponent(Transform).position.y + Config.userSize &&
         this.camera.position.y < this.platforms[i + 1].getComponent(Transform).position.y + Config.userSize && !this.platformsTimer[i]){
 
-        this.platformsTimer[i] = setTimeout( () => {
+        this.platformsTimer[i] = Utils.setTimeout( () => {
 
           platform.addComponentOrReplace(new utils.MoveTransformComponent(
             platform.getComponent(Transform).position,
@@ -129,7 +130,7 @@ export default class LevelTwo implements Level {
 
     Object.keys(this.platformsTimer).forEach( i => {
 
-      clearTimeout(this.platformsTimer[i])
+      this.platformsTimer[i].clearTimeout()
       delete this.platformsTimer[i]
 
     })

@@ -3,6 +3,7 @@ import * as ui from '../node_modules/@dcl/ui-utils/index'
 import { PromptStyles, ButtonStyles, Dialog } from "../node_modules/@dcl/ui-utils/utils/types"
 import Config from "./config/index"
 
+import * as Utils from "./modules/utils"
 import scene from "./modules/scene"
 import Scores from "./modules/scores"
 import Timer from "./modules/timer"
@@ -32,7 +33,7 @@ class Game {
   timer: Timer
   time: number
   scoreLevel: number
-  interval: NodeJS.Timeout
+  interval: any
   sawWelcomeMessage: boolean
   isPlaying: boolean
   isDoorOpen: boolean
@@ -246,7 +247,7 @@ start playing.`, -140, -50)
     this.isPlaying = false
 
     if(this.interval){
-      clearInterval(this.interval)
+      this.interval.clearInterval()
     }
 
     this.timer.reset()
@@ -260,14 +261,14 @@ start playing.`, -140, -50)
     }
 
     if(this.interval){
-      clearInterval(this.interval)
+      this.interval.clearInterval()
     }
 
     this.time = 0
     this.timer.setValue('')
     this.timer.show()
 
-    this.interval = setInterval( () => {
+    this.interval = Utils.setInterval( () => {
 
       this.time += 0.01
       this.timer.setValue(this.time.toFixed(2) )
@@ -315,6 +316,7 @@ start playing.`, -140, -50)
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
     movePlayerTo({ x: 8, y: 0, z: 0 }, { x: 8, y: 2, z: 8 })
+    this.ananasPlant.getComponent(Animator).getClip('vibrateAction').play()
 
     const dialogWindow = new ui.DialogWindow({
       path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599210047/dialogue1_y0vhsf.png',
@@ -371,8 +373,18 @@ ananhouse.`,
     }
 
     if(this.ananasPlant){
-      this.ananasPlant.addComponentOrReplace(new utils.MoveTransformComponent(this.ananasPlant.getComponent(Transform).position, new Vector3(this.ananasPlant.getComponent(Transform).position.x, -2, this.ananasPlant.getComponent(Transform).position.z), 5))
-      this.ananasPlant.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananasPlant.getComponent(Transform).scale, new Vector3(0, 0, 0), 5))
+
+      this.ananasPlant.getComponent(Animator).getClip('vibrateAction').stop();
+      [
+        'feuillesAction',
+        'tigeAction',
+        'reduceAction',
+      ].forEach(animationName => {
+
+        this.ananasPlant.getComponent(Animator).getClip(animationName).play()
+
+      })
+
     }
 
     if(this.goldenAnanas){

@@ -7,6 +7,20 @@ export default (pivot) => {
   }) )
   const gltf = new GLTFShape("models/ananasPlant.glb")
   ananasPlant.addComponentOrReplace(gltf);
+  ananasPlant.addComponentOrReplace(new Animator());
+
+  [
+    'vibrateAction',
+    'feuillesAction',
+    'tigeAction',
+    'reduceAction',
+  ].forEach(animationName => {
+    const animState = new AnimationState(animationName)
+    animState.speed = 1
+    animState.looping = false
+    ananasPlant.getComponent(Animator).addClip(animState)
+
+  })
 
   engine.addEntity(ananasPlant)
   return ananasPlant
