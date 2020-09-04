@@ -25,9 +25,8 @@ export default class Scores {
     this.userScores.addComponentOrReplace(this.userScoresText)
     this.userScores.addComponentOrReplace(
       new Transform({
-        // position: new Vector3(8 - 2.74, 1.7, 8 + 2.65),
-        position: new Vector3(9 - 2.74, 1.7, 7 + 2.65), //todo temp
-        rotation: Quaternion.Euler(10.6, 407 - 90, 0.15),
+        position: new Vector3(8, 1.5078, 8 + 3.768),
+        rotation: Quaternion.Euler(9.76, 0, 0),
         scale: new Vector3(1, 1, 1)
       })
     )

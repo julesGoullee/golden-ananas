@@ -31,7 +31,6 @@ export default class LevelThree implements Level {
 
     this.ananas.addComponentOrReplace(new Transform({
       position: new Vector3(8, 0, 8),
-      scale: new Vector3(0, 0, 0)
     }) )
 
     this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananas.getComponent(Transform).scale, new Vector3(1, 1, 1), 4, () => {

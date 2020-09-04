@@ -321,7 +321,9 @@ start playing.`, -140, -50)
     this.ananasPlant.getComponent(Animator).getClip('vibrateAction').play()
 
     const dialogWindow = new ui.DialogWindow({
-      path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599210047/dialogue1_y0vhsf.png',
+      path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254946/dialogAnanas_epfecz.png',
+      offsetX: 100,
+      offsetY: -20
     }, true)
     const NPCTalk: Dialog[] = [
       {
@@ -464,6 +466,26 @@ ananhouse.`,
 
               this.isDoorOpen = true
 
+              Utils.setTimeout(() => {
+
+                const dialogWindow = new ui.DialogWindow({
+                  path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254945/dialogVer_qklwn9.png',
+                  offsetX: 150,
+                  offsetY: -40
+                }, true)
+                const NPCTalk: Dialog[] = [
+                  {
+                    text: `Weclome here`,
+                  },
+                  {
+                    text: `Head up, level 3`,
+                    isEndOfDialog: true,
+                  }
+                ]
+                dialogWindow.openDialogWindow(NPCTalk, 0)
+
+              }, 7000)
+
             }
 
           },
@@ -493,7 +515,8 @@ ananhouse.`,
         onFinish()
       },
       'Ok',
-      'No'
+      'No',
+      true
     )
 
   }
