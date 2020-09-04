@@ -475,10 +475,10 @@ ananhouse.`,
                 }, true)
                 const NPCTalk: Dialog[] = [
                   {
-                    text: `Weclome here`,
+                    text: `Thanks for testing!`,
                   },
                   {
-                    text: `Head up, level 3`,
+                    text: `We're waiting for your feedback on discord!`,
                     isEndOfDialog: true,
                   }
                 ]
