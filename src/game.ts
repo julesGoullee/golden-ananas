@@ -19,6 +19,7 @@ import getDoor from "./modules/entities/door"
 import getButtonStart from "./modules/entities/buttonStart"
 import getAnanasDeco from "./modules/entities/ananasDeco"
 import getAnanasPlant from "./modules/entities/ananasPlant"
+import getPapyVer from "./modules/entities/papyVer"
 
 import Level from "./modules/levels/Level";
 import LevelOne from "./modules/levels/one"
@@ -48,6 +49,7 @@ class Game {
   ananas: Entity
   ananasDecoIndoor: Entity
   door: Entity
+  papyVer: Entity
   panneau: Entity
   ranks: Entity
   scores: Scores
@@ -366,7 +368,7 @@ ananhouse.`,
 
   startLevel2() {
 
-    if (!this.door) {
+    if(!this.door){
 
       this.door = getDoor(scene)
 
@@ -401,9 +403,14 @@ ananhouse.`,
         this.level2 = new LevelTwo(this.camera, this.pivot, this.buttonStart, this.platforms, this.door, () => this.start(), () => this.finishLevel2())
         this.level2.init()
         this.currentLevel = this.level2
-        if (!this.ananasDecoIndoor) {
+
+        if(!this.ananasDecoIndoor){
           this.ananasDecoIndoor = getAnanasDeco(scene)
         }
+        if(!this.papyVer){
+          this.papyVer = getPapyVer(scene)
+        }
+
         this.scores.displayUserScores()
         this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 3))
 
@@ -445,10 +452,16 @@ ananhouse.`,
                 'keyAction'
               ].forEach(animationName => {
 
-                this.door.getComponent(Animator).getClip(animationName).reset()
                 this.door.getComponent(Animator).getClip(animationName).play()
 
               })
+
+              this.papyVer.addComponentOrReplace(new utils.Delay(2000, () => {
+
+                this.papyVer.getComponent(Animator).getClip('papyArmatureAction').play()
+
+              }) )
+
               this.isDoorOpen = true
 
             }
