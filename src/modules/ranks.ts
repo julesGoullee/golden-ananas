@@ -9,7 +9,7 @@ export default (panneau) => {
 
   ranks.addComponentOrReplace(
     new Transform({
-      position: new Vector3(-1.5, 6.5, -0.2),
+      position: new Vector3(-1.7, 6.5, -0.2),
       rotation: new Quaternion(0, 0, 0, 0),
       scale: new Vector3(1, 1, 1)
     })

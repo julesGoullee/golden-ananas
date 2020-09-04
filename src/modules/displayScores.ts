@@ -84,13 +84,13 @@ export default class DisplayScores implements ISystem {
       getTopRanksData()
         .then((ranks) => {
 
-          let ranksTextContent = ' Player         Score\n'
+          let ranksTextContent = 'PLAYER     SCORE\n'
 
           const ranksSorted = ranks.sort( (a, b) => a.score < b.score ? 1 : -1).slice(0, 10)
 
           for (let i = 0; i < ranksSorted.length; i++){
 
-            ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...       ${ranks[i].score}`
+            ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...    ${ranks[i].score}`
 
           }
 
