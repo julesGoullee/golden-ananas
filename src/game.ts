@@ -4,8 +4,7 @@ import { PromptStyles, ButtonStyles, Dialog } from "../node_modules/@dcl/ui-util
 import Config from "./config/index"
 
 import scene from "./modules/scene"
-import DisplayScores from "./modules/displayScores"
-import { submitScore } from "./modules/contract"
+import Scores from "./modules/scores"
 import Timer from "./modules/timer"
 import getRanks from "./modules/ranks"
 import getPivot from "./modules/pivot"
@@ -40,9 +39,6 @@ class Game {
   isFinishLvl1: boolean
   isFinishLvl2: boolean
   isFinishLvl3: boolean
-  isSubmitScoreLvl1: boolean
-  isSubmitScoreLvl2: boolean
-  isSubmitScoreLvl3: boolean
 
   ground: Entity
   infoSign: Entity
@@ -53,7 +49,7 @@ class Game {
   door: Entity
   panneau: Entity
   ranks: Entity
-  displayScores: DisplayScores
+  scores: Scores
 
   buttonStart: Entity
   platforms: Entity[]
@@ -74,9 +70,6 @@ class Game {
     this.isFinishLvl1 = false
     this.isFinishLvl2 = false
     this.isFinishLvl3 = false
-    this.isSubmitScoreLvl1 = false
-    this.isSubmitScoreLvl2 = false
-    this.isSubmitScoreLvl3 = false
     this.platforms = []
 
     // Global entities
@@ -90,26 +83,25 @@ class Game {
     this.ranks = getRanks(this.panneau)
     const userScores = new Entity('userScores')
     userScores.setParent(scene)
-    this.displayScores = new DisplayScores(this.ranks.getComponent(TextShape), userScores)
-
-    engine.addSystem(this.displayScores)
+    this.scores = new Scores(this.ranks.getComponent(TextShape), userScores)
 
     this.panneau.addComponentOrReplace(
       new OnPointerDown(
         e => {
-          this.displayScores.refreshData()
+          this.scores.refreshTopRanks()
         },
         {
           button: ActionButton.POINTER,
           hoverText: 'Refresh Ranks',
-          distance: 8
+          distance: 6
         }
       )
     )
 
     // Levels
-    this.displayScores.getPlayerScores()
-      .then( (resScore: any) => {
+    Promise.all([
+      this.scores.refreshTopRanks(),
+      this.scores.getPlayerScores().then( (resScore: any) => {
 
         this.buttonStart = getButtonStart(this.pivot)
         this.platforms = getPlatform(this.pivot)
@@ -136,7 +128,9 @@ class Game {
 
         }
 
-      }).catch(error => {
+      })
+
+    ]).catch(error => {
 
       log(error.toString() )
       this.buttonStart = getButtonStart(this.pivot)
@@ -161,6 +155,7 @@ class Game {
 
       this.currentLevel.reset()
       this.reset()
+      this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 3))
 
     } else if(this.isPlaying){
 
@@ -256,8 +251,6 @@ start playing.`, -140, -50)
 
     this.timer.reset()
 
-    this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 3))
-
   }
 
   start(){
@@ -338,19 +331,13 @@ performance!`,
         labelE: {
           label: 'Ok'
         },
-        ifPressE: 2,
-        ifPressF: 2,
-        triggeredByE: () => {
-          if(!this.isSubmitScoreLvl1 && (this.displayScores.scores.levels[0] == 0 || this.displayScores.scores.levels[0] > this.scoreLevel) ){
-            this.isSubmitScoreLvl1 = true
-
-            submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) )
-              .then( (res) => this.displayScores.refreshData() )
-          }
-        },
         labelF: {
           label: 'No'
-        }
+        },
+        ifPressE: 2,
+        ifPressF: 2,
+        triggeredByE: () => this.scores.setScoreForLevel(0, this.scoreLevel, true),
+        triggeredByF: () => this.scores.setScoreForLevel(0, this.scoreLevel, false)
       },
       {
         text: `I didn't see much crazy
@@ -364,24 +351,9 @@ need to meet you.`,
         text: `Head up, go grab the key
 and meet me in my
 ananhouse.`,
-        isQuestion: true,
-        ifPressE: 5,
-        ifPressF: 5,
-        labelE: {
-          label: 'Go!'
-        },
-        labelF: {
-          offsetX: 10,
-          label: 'Go in grey',
-        },
-        triggeredByE: () => {
+        isEndOfDialog: true,
+        triggeredByNext: () => {
           this.startLevel2()
-          dialogWindow.closeDialogWindow()
-        },
-        triggeredByF: () => {
-          this.startLevel2()
-          dialogWindow.closeDialogWindow()
-
         },
       }
     ]
@@ -420,7 +392,8 @@ ananhouse.`,
         if (!this.ananasDecoIndoor) {
           this.ananasDecoIndoor = getAnanasDeco(scene)
         }
-        this.displayScores.displayUserScores()
+        this.scores.displayUserScores()
+        this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 3))
 
       }))
 
@@ -440,6 +413,8 @@ ananhouse.`,
     movePlayerTo({ x: 8, y: 0, z: 0 }, { x: 8, y: 2, z: 8 })
 
     const onFinish = () => {
+
+      this.scores.displayUserScores()
       prompt.close()
       this.door.addComponentOrReplace(
         new OnPointerDown(
@@ -448,16 +423,14 @@ ananhouse.`,
             if(!this.isDoorOpen){
 
               [
-                'porte_colliderAction',
+                'cubeDAction',
+                'cubeGAction',
+                'plancheAction',
                 'porteAction',
                 'porte2_colliderAction',
-                'plancheAction',
-                'cubeAction2',
-                'cubeAction',
-                'keyAction.005',
-                'lockAction1',
-                'lockAction2',
-                'keyAction',
+                'porte_colliderAction',
+                'lockAction',
+                'keyAction'
               ].forEach(animationName => {
 
                 this.door.getComponent(Animator).getClip(animationName).reset()
@@ -485,19 +458,13 @@ ananhouse.`,
 
         log(`accept`)
 
-        if(!this.isSubmitScoreLvl2 && (this.displayScores.scores.levels[1] == 0 || this.displayScores.scores.levels[1] > this.scoreLevel)){
-
-          this.isSubmitScoreLvl2 = true
-
-          submitScore(1, (this.time * 100).toFixed(0) )
-            .then( (res) => this.displayScores.refreshData() )
-            .then( () => this.displayScores.displayUserScores() )
-
-        }
+        this.scores.setScoreForLevel(1, this.scoreLevel, true)
         onFinish()
+
       },
       () => {
         log(`reject`)
+        this.scores.setScoreForLevel(1, this.scoreLevel, false)
         onFinish()
       },
       'Ok',
@@ -511,11 +478,11 @@ ananhouse.`,
     if(!this.ananasDecoIndoor){
       this.ananasDecoIndoor = getAnanasDeco(scene)
     }
-    this.displayScores.displayUserScores()
 
     this.level3 = new LevelThree(this.pivot, this.ananas, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel3() )
     this.level3.init()
     this.currentLevel = this.level3
+    this.scores.displayUserScores()
 
   }
 

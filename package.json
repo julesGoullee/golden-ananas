@@ -14,12 +14,12 @@
     "ecs:install-next": "npm install --save-dev decentraland-ecs@next"
   },
   "dependencies": {
-    "@dcl/crypto-utils": "^1.0.11",
-    "@dcl/ui-utils": "^1.1.0",
-    "@types/node": "^14.6.3",
+    "@dcl/crypto-utils": "^1.0.12",
+    "@dcl/ui-utils": "^1.2.0",
+    "@types/node": "^14.6.4",
     "decentraland": "^3.4.4-20200903135831.commit-46acf59",
     "decentraland-builder-scripts": "^0.24.0",
-    "decentraland-ecs": "^6.5.1-20200903175247.commit-8debc3f",
+    "decentraland-ecs": "^6.5.1-20200904153133.commit-2cabc88",
     "decentraland-ecs-utils": "^1.1.4",
     "eth-connect": "^4.0.2"
   },

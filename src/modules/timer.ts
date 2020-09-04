@@ -32,8 +32,8 @@ export default class Timer {
     this.counter.visible = false
     this.counter.color = Color4.Black()
     this.counter.fontSize = 35
-    this.counter.positionY = 2
-    this.counter.positionX = 10
+    this.counter.positionY = 6.5
+    this.counter.positionX = 11
     this.counter.vAlign = 'top'
     this.counter.hAlign = 'center'
     this.counter.width = 110

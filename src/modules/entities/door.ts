@@ -29,16 +29,14 @@ export default (pivot) => {
   lock.addComponentOrReplace(new Animator());
 
   [
-    'porte_colliderAction',
+    'cubeDAction',
+    'cubeGAction',
+    'plancheAction',
     'porteAction',
     'porte2_colliderAction',
-    'plancheAction',
-    'cubeAction2',
-    'cubeAction',
-    'keyAction.005',
-    'lockAction1',
-    'lockAction2',
-    'keyAction',
+    'porte_colliderAction',
+    'lockAction',
+    'keyAction'
   ].forEach(animationName => {
     const animState = new AnimationState(animationName)
     animState.speed = speed1

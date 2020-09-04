@@ -6,7 +6,8 @@ const Config = {
   },
   minContribution: 0.05, // in eth
   userSize: 1.80,
-  countLevels: 3
+  countLevels: 3,
+  scoreBase: 100000
 }
 
 export default Config
