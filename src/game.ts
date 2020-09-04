@@ -1,6 +1,6 @@
 import utils from "../node_modules/decentraland-ecs-utils/index"
 import * as ui from '../node_modules/@dcl/ui-utils/index'
-import { PromptStyles, ButtonStyles } from "../node_modules/@dcl/ui-utils/utils/types"
+import { PromptStyles, ButtonStyles, Dialog } from "../node_modules/@dcl/ui-utils/utils/types"
 import Config from "./config/index"
 
 import scene from "./modules/scene"
@@ -296,12 +296,14 @@ start playing.`, -140, -50)
     if(!this.goldenAnanas){
 
       this.goldenAnanas = getGoldenAnanas(this.pivot)
-      this.goldenAnanas.addComponentOrReplace(new Transform({
-        position: new Vector3(0, 8, 0),
-        scale: new Vector3(1, 1, 1),
-      }) )
 
     }
+
+    this.goldenAnanas.addComponentOrReplace(new Transform({
+      position: new Vector3(0, 8, 0),
+      scale: new Vector3(3, 3, 3)
+    }) )
+
     this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 0.5) )
 
     this.level1 = new LevelOne(this.pivot, this.ananas, this.ananasPlant, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel1())
@@ -319,36 +321,72 @@ start playing.`, -140, -50)
     this.isFinishLvl1 = true
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
-    movePlayerTo({ x: 8, y: 0, z: 1 }, { x: 8, y: 2, z: 8 })
+    movePlayerTo({ x: 8, y: 0, z: 0 }, { x: 8, y: 2, z: 8 })
 
-    const onFinish = () => {
-      prompt.close()
-      this.startLevel2()
-    }
+    const dialogWindow = new ui.DialogWindow({
+      path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599210047/dialogue1_y0vhsf.png',
+    }, true)
+    const NPCTalk: Dialog[] = [
+      {
+        text: `${this.scoreLevel} seconds!
+Wow! What an impressive
+performance!`,
+      },
+      {
+        text: 'Do you want to save your progression?',
+        isQuestion: true,
+        labelE: {
+          label: 'Ok'
+        },
+        ifPressE: 2,
+        ifPressF: 2,
+        triggeredByE: () => {
+          if(!this.isSubmitScoreLvl1 && (this.displayScores.scores.levels[0] == 0 || this.displayScores.scores.levels[0] > this.scoreLevel) ){
+            this.isSubmitScoreLvl1 = true
 
-    const prompt = new ui.OptionPrompt(
-      `Congrats! You done this first level in ${this.scoreLevel} seconds`,
-      'Do you want to save your progression?',
-      () => {
-
-        log(`accept`)
-
-        if(!this.isSubmitScoreLvl1 && (this.displayScores.scores.levels[0] == 0 || this.displayScores.scores.levels[0] > this.scoreLevel) ){
-          this.isSubmitScoreLvl1 = true
-
-          submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) )
-            .then( (res) => this.displayScores.refreshData() )
-
+            submitScore(0, parseInt( (this.scoreLevel * 100).toString(), 10) )
+              .then( (res) => this.displayScores.refreshData() )
+          }
+        },
+        labelF: {
+          label: 'No'
         }
-        onFinish()
       },
-      () => {
-        log(`reject`)
-        onFinish()
+      {
+        text: `I didn't see much crazy
+jumper since a while now...`,
       },
-      'Ok',
-      'No'
-    )
+      {
+        text: `I feel it.. it’s... I absolutely
+need to meet you.`,
+      },
+      {
+        text: `Head up, go grab the key
+and meet me in my
+ananhouse.`,
+        isQuestion: true,
+        ifPressE: 5,
+        ifPressF: 5,
+        labelE: {
+          label: 'Go!'
+        },
+        labelF: {
+          offsetX: 10,
+          label: 'Go in grey',
+        },
+        triggeredByE: () => {
+          this.startLevel2()
+          dialogWindow.closeDialogWindow()
+        },
+        triggeredByF: () => {
+          this.startLevel2()
+          dialogWindow.closeDialogWindow()
+
+        },
+      }
+    ]
+
+    dialogWindow.openDialogWindow(NPCTalk, 0)
 
   }
 
@@ -399,7 +437,7 @@ start playing.`, -140, -50)
     this.isFinishLvl2 = true
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
-    movePlayerTo({ x: 8, y: 0, z: 1 }, { x: 8, y: 2, z: 8 })
+    movePlayerTo({ x: 8, y: 0, z: 0 }, { x: 8, y: 2, z: 8 })
 
     const onFinish = () => {
       prompt.close()

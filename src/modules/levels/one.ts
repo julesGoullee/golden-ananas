@@ -28,7 +28,7 @@ export default class LevelOne implements Level {
   init() {
 
     this.ananas.addComponentOrReplace(new Transform({
-      position: new Vector3(8.3, 2, 7.9),
+      position: new Vector3(8, 1.4, 8),
       scale: new Vector3(0.05, 0.05, 0.05),
     }) )
 
