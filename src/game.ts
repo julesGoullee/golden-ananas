@@ -359,6 +359,8 @@ and meet me in my
 ananhouse.`,
         isEndOfDialog: true,
         triggeredByNext: () => {
+          engine.removeEntity(this.ananasPlant)
+          this.ananasPlant = null
           this.startLevel2()
         },
       }
