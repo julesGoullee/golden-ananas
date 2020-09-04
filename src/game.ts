@@ -65,7 +65,6 @@ class Game {
   constructor() {
 
     this.camera = Camera.instance
-    this.timer = new Timer()
 
     this.time = 1
     this.interval = null
@@ -78,6 +77,7 @@ class Game {
     this.isSubmitScoreLvl1 = false
     this.isSubmitScoreLvl2 = false
     this.isSubmitScoreLvl3 = false
+    this.platforms = []
 
     // Global entities
     this.ground = getGround(scene)
@@ -113,6 +113,7 @@ class Game {
 
         this.buttonStart = getButtonStart(this.pivot)
         this.platforms = getPlatform(this.pivot)
+        this.timer = new Timer()
 
         if(resScore.levels[0] === 0){
 
@@ -140,6 +141,7 @@ class Game {
       log(error.toString() )
       this.buttonStart = getButtonStart(this.pivot)
       this.platforms = getPlatform(this.pivot)
+      this.timer = new Timer()
       this.startLevel1()
 
     })
@@ -200,6 +202,9 @@ start playing.`, -140, -50)
 
   showCloud(){
 
+    if(this.platforms.length === 0){
+      return
+    }
     log('showCloud')
     this.platforms[0].getComponent(GLTFShape).visible = true
     this.platforms.slice(1).map(platform => {
@@ -214,7 +219,9 @@ start playing.`, -140, -50)
   }
 
   hideCloud(){
-
+    if(this.platforms.length === 0){
+      return
+    }
     log('hideCloud')
     this.platforms.slice(1).map(platform => {
 

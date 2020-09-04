@@ -94,8 +94,6 @@ export default class DisplayScores implements ISystem {
 
           }
 
-          console.log('ranksTextContent', ranksTextContent)
-
           this.ranksText.value = ranksTextContent
 
         })
