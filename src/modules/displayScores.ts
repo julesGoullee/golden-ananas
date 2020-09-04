@@ -77,28 +77,29 @@ export default class DisplayScores implements ISystem {
 
   refreshData(){
 
-    getPlayerScores().then(scores => {
+    return Promise.all([
+      getPlayerScores().then(scores => {
+        this.scores = scores;
+      }),
+      getTopRanksData()
+        .then((ranks) => {
 
-      this.scores = scores;
+          let ranksTextContent = ' Player         Score\n'
 
-    });
+          const ranksSorted = ranks.sort( (a, b) => a.score < b.score ? 1 : -1).slice(0, 10)
 
-    getTopRanksData()
-      .then((ranks) => {
+          for (let i = 0; i < ranksSorted.length; i++){
 
-        let ranksTextContent = ' Player         Score\n'
+            ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...       ${ranks[i].score}`
 
-        const ranksSorted = ranks.sort( (a, b) => a.score < b.score ? 1 : -1).slice(0, 10)
+          }
 
-        for (let i = 0; i < ranksSorted.length; i++){
+          console.log('ranksTextContent', ranksTextContent)
 
-          ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...       ${ranks[i].score}`
+          this.ranksText.value = ranksTextContent
 
-        }
-
-        this.ranksText.value = ranksTextContent
-
-      })
+        })
+    ])
 
   }
 

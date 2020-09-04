@@ -312,10 +312,10 @@ start playing.`, -140, -50)
     this.isFinishLvl1 = true
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
+    movePlayerTo({ x: 8, y: 0, z: 1 }, { x: 8, y: 2, z: 8 })
 
     const onFinish = () => {
       prompt.close()
-      movePlayerTo({ x: 8, y: 0, z: 1 }, { x: 8, y: 2, z: 8 })
       this.startLevel2()
     }
 
@@ -392,10 +392,10 @@ start playing.`, -140, -50)
     this.isFinishLvl2 = true
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
+    movePlayerTo({ x: 8, y: 0, z: 1 }, { x: 8, y: 2, z: 8 })
 
     const onFinish = () => {
       prompt.close()
-      movePlayerTo({ x: 8, y: 0, z: 1 }, { x: 8, y: 2, z: 8 })
       this.door.addComponentOrReplace(
         new OnPointerDown(
           e => {
