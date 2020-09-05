@@ -83,7 +83,7 @@ export default class LevelTwo implements Level {
               }) )
 
             })
-
+            engine.removeEntity(this.buttonEndKey)
             this.onEnd()
 
           }) )

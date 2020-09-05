@@ -200,11 +200,10 @@ start playing.`, -140, -50)
 
   showCloud(){
 
-    if(this.platforms.length === 0){
+    if(this.platforms.length === 0 || this.platforms[1].getComponent(Transform).scale.x != 0){
       return
     }
     log('showCloud')
-    this.platforms[0].getComponent(GLTFShape).visible = true
     this.platforms.slice(1).map(platform => {
 
       if(platform.getComponent(Transform).scale.x === 0){
@@ -217,24 +216,16 @@ start playing.`, -140, -50)
   }
 
   hideCloud(){
-    if(this.platforms.length === 0){
+    if(this.platforms.length === 0 || this.platforms[1].getComponent(Transform).scale.x != 0.9){
       return
     }
     log('hideCloud')
     this.platforms.slice(1).map(platform => {
 
-      if(platform.getComponent(Transform).scale.x === 0.9){
-
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0.9, 0.9, 0.9), new Vector3(0, 0, 0), 0.5, () => {
-          platform.getComponent(GLTFShape).visible = false
-
-        }) )
-
-      } else if(platform.getComponent(Transform).scale.x === 0){
-
+      platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0.9, 0.9, 0.9), new Vector3(0, 0, 0), 0.5, () => {
         platform.getComponent(GLTFShape).visible = false
 
-      }
+      }) )
 
     })
 
@@ -359,8 +350,6 @@ and meet me in my
 ananhouse.`,
         isEndOfDialog: true,
         triggeredByNext: () => {
-          engine.removeEntity(this.ananasPlant)
-          this.ananasPlant = null
           this.startLevel2()
         },
       }
@@ -394,8 +383,10 @@ ananhouse.`,
     }
 
     if(this.goldenAnanas){
+
       this.goldenAnanas.addComponentOrReplace(new utils.MoveTransformComponent(this.goldenAnanas.getComponent(Transform).position, new Vector3(0, 0, 0), 3) )
-      this.goldenAnanas.addComponentOrReplace(new utils.ScaleTransformComponent(this.goldenAnanas.getComponent(Transform).scale, new Vector3(0, 0, 0), 3) )
+      this.goldenAnanas.addComponentOrReplace(new utils.ScaleTransformComponent(this.goldenAnanas.getComponent(Transform).scale, new Vector3(0, 0, 0), 3 ) )
+
     }
 
     this.ananas.addComponentOrReplace(new utils.MoveTransformComponent(this.ananas.getComponent(Transform).position, new Vector3(8, 0, 8), 3, () => {
@@ -408,6 +399,12 @@ ananhouse.`,
         this.level2.init()
         this.currentLevel = this.level2
 
+        if(this.goldenAnanas){
+          engine.removeEntity(this.goldenAnanas)
+        }
+        if(this.ananasPlant){
+          engine.removeEntity(this.ananasPlant)
+        }
         if(!this.ananasDecoIndoor){
           this.ananasDecoIndoor = getAnanasDeco(scene)
         }
@@ -482,6 +479,9 @@ ananhouse.`,
                   {
                     text: `We're waiting for your feedback on discord!`,
                     isEndOfDialog: true,
+                    triggeredByNext: () => {
+                      engine.removeEntity(this.door)
+                    },
                   }
                 ]
                 dialogWindow.openDialogWindow(NPCTalk, 0)

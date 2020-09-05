@@ -1,7 +1,0 @@
-<svg width="208" height="108" viewBox="0 0 208 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M4 4H204V104H4V4Z" fill="#C4C4C4"/>
-<path d="M4 4V0.5C2.067 0.5 0.5 2.067 0.5 4L4 4ZM204 4H207.5C207.5 2.067 205.933 0.5 204 0.5V4ZM204 104V107.5C205.933 107.5 207.5 105.933 207.5 104H204ZM4 104H0.5C0.5 105.933 2.067 107.5 4 107.5L4 104ZM4 7.5H204V0.5H4V7.5ZM200.5 4V104H207.5V4H200.5ZM204 100.5H4V107.5H204V100.5ZM7.5 104V4H0.5V104H7.5Z" fill="#C4C4C4"/>
-<circle cx="60" cy="84" r="15" fill="black"/>
-<circle cx="148" cy="84" r="15" fill="black"/>
-<rect x="29" y="10" width="150" height="50" fill="black"/>
-</svg>
