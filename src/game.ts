@@ -47,6 +47,8 @@ class Game {
   goldenAnanas: Entity
   ananasPlant: Entity
   ananas: Entity
+  canvas: UICanvas
+
   ananasDecoIndoor: Entity
   door: Entity
   papyVer: Entity
@@ -80,6 +82,7 @@ class Game {
     this.infoSign = getInfoSign(scene)
     this.pivot = getPivot(scene)
     this.ananas = getAnanas(scene)
+    this.canvas = new UICanvas()
 
     // Panneau
     this.panneau = getPanneau(scene)
@@ -108,7 +111,7 @@ class Game {
 
         this.buttonStart = getButtonStart(this.pivot)
         this.platforms = getPlatform(this.pivot)
-        this.timer = new Timer()
+        this.timer = new Timer(this.canvas)
 
         if(resScore.levels[0] === 0){
 
@@ -138,7 +141,7 @@ class Game {
       log(error.toString() )
       this.buttonStart = getButtonStart(this.pivot)
       this.platforms = getPlatform(this.pivot)
-      this.timer = new Timer()
+      this.timer = new Timer(this.canvas)
       this.startLevel1()
 
     })
@@ -343,16 +346,11 @@ jumper since a while now...`,
       {
         text: `I feel it.. it’s... I absolutely
 need to meet you.`,
-      },
-      {
-        text: `Head up, go grab the key
-and meet me in my
-ananhouse.`,
         isEndOfDialog: true,
         triggeredByNext: () => {
           this.startLevel2()
         },
-      }
+      },
     ]
 
     dialogWindow.openDialogWindow(NPCTalk, 0)
@@ -396,7 +394,6 @@ ananhouse.`,
       this.door.addComponentOrReplace(new utils.ScaleTransformComponent(ananasInitScale, new Vector3(1, 1, 1), 4, () => {
 
         this.level2 = new LevelTwo(this.camera, this.pivot, this.buttonStart, this.platforms, this.door, () => this.start(), () => this.finishLevel2())
-        this.level2.init()
         this.currentLevel = this.level2
 
         if(this.goldenAnanas){
@@ -413,8 +410,24 @@ ananhouse.`,
         }
 
         this.scores.displayUserScores()
-        this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 3))
+        const dialogWindow = new ui.DialogWindow({
+          path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254946/dialogAnanas_epfecz.png',
+          offsetX: 100,
+          offsetY: -20
+        }, true)
+        const NPCTalk: Dialog[] = [
+          {
+            text: `Head up, go grab the key
+and meet me in my
+ananhouse.`,
+            isEndOfDialog: true,
+            triggeredByNext: () => {
+              this.level2.init()
+            },
+          }
+        ]
 
+        dialogWindow.openDialogWindow(NPCTalk, 0)
       }))
 
     }))

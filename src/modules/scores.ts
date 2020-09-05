@@ -17,7 +17,7 @@ export default class Scores {
     }
     this.isSubmitScoreLvl = []
     this.ranksText = ranksText
-    this.ranksText.value = 'PLAYER     SCORE\n'
+    this.ranksText.value = '   PLAYER        SCORE\n'
     this.userScores = userScores
 
     this.userScoresText = new TextShape('')
@@ -70,13 +70,17 @@ export default class Scores {
     return getTopRanksData()
       .then((ranks) => {
 
-        let ranksTextContent = 'PLAYER     SCORE\n'
+        let ranksTextContent = '   PLAYER        SCORE\n'
 
         const ranksSorted = ranks.sort( (a, b) => a.score < b.score ? 1 : -1).slice(0, 10)
 
         for (let i = 0; i < ranksSorted.length; i++){
 
-          ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...    ${ranks[i].score}`
+          ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...  ${ranks[i].score}`
+          // ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...  ${ranks[i].score}`
+          // ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...  ${ranks[i].score}`
+          // ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...  ${ranks[i].score}`
+          // ranksTextContent += `\n${ranksSorted[i].player.slice(0, 8)}...  ${ranks[i].score}`
 
         }
 

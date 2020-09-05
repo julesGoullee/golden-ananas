@@ -4,8 +4,9 @@ export default class Timer {
   counter: UIText
   timerContainer: UIContainerStack
   isInit: boolean
-  constructor() {
+  constructor(canvas) {
 
+    this.canvas = canvas
     this.isInit = false
 
   }
@@ -13,8 +14,6 @@ export default class Timer {
   init(){
 
     this.isInit = true
-    this.canvas = new UICanvas()
-    this.canvas.visible = false
 
     this.timerContainer = new UIContainerStack(this.canvas)
     this.timerContainer.visible = false
