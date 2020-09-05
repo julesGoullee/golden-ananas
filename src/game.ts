@@ -92,7 +92,7 @@ class Game {
         },
         {
           button: ActionButton.POINTER,
-          hoverText: 'Refresh Ranks',
+          hoverText: 'Refresh leadboard',
           distance: 6
         }
       )
@@ -166,14 +166,16 @@ class Game {
 
         this.sawWelcomeMessage = true;
         const prompt = new ui.CustomPrompt(PromptStyles.DARKLARGE, 500, 400)
+        prompt.addIcon(`images/dialogAnanas.png`, -50, 0, 64, 64)
         prompt.addText('Welcome to the Golden Ananas Challenge!', 0, 140, Color4.White(), 20)
-        const content = prompt.addText(`Your goal is to retrieve the holy pineapple as
-quickly as possible by using the platforms available
-to you! 
+        const content = prompt.addText(`Do you think you're ready ?!
+        
+        
+The propose is to activate the button above.
 
-So ready?
-Get on the first platform and click on the button to
-start playing.`, -140, -50)
+Jump on the cloud,
+activate the button down here is a good start
+`, -140, -50)
         content.text.hTextAlign = 'left'
         prompt.addButton(
           `Go!`,
@@ -316,7 +318,13 @@ Wow! What an impressive
 performance!`,
       },
       {
-        text: 'Do you want to save your progression?',
+        text: `At the end of each level, you can save your score to receive your badge in exchange and appear on the leaderboard.`,
+      },
+      {
+        text: `Personally, it allows me to follow the best and finally find my new recruit ...`,
+      },
+      {
+        text: 'Do you want to save your progress and get your first Golden Ananas Challenge badge?',
         isQuestion: true,
         labelE: {
           label: 'Ok'
@@ -324,13 +332,13 @@ performance!`,
         labelF: {
           label: 'No'
         },
-        ifPressE: 2,
-        ifPressF: 2,
+        ifPressE: 4,
+        ifPressF: 4,
         triggeredByE: () => this.scores.setScoreForLevel(0, this.scoreLevel, true),
         triggeredByF: () => this.scores.setScoreForLevel(0, this.scoreLevel, false)
       },
       {
-        text: `I didn't see much crazy
+        text: `I didn't see such crazy
 jumper since a while now...`,
       },
       {
@@ -409,7 +417,7 @@ need to meet you.`,
           {
             text: `Head up, go grab the key
 and meet me in my
-ananhouse.`,
+Anan’house.`,
             isEndOfDialog: true,
             triggeredByNext: () => {
               this.level2.init()
@@ -434,93 +442,117 @@ ananhouse.`,
     this.reset()
     movePlayerTo({ x: 8, y: 0, z: 0 }, { x: 8, y: 2, z: 8 })
 
-    const onFinish = () => {
+    this.scores.displayUserScores()
+    this.door.addComponentOrReplace(
+      new OnPointerDown(
+        e => {
 
-      this.scores.displayUserScores()
-      prompt.close()
-      this.door.addComponentOrReplace(
-        new OnPointerDown(
-          e => {
+          if(!this.isDoorOpen){
 
-            if(!this.isDoorOpen){
+            [
+              'cubeDAction',
+              'cubeGAction',
+              'plancheAction',
+              'porteAction',
+              'porte2_colliderAction',
+              'porte_colliderAction',
+              'lockAction',
+              'keyAction'
+            ].forEach(animationName => {
 
-              [
-                'cubeDAction',
-                'cubeGAction',
-                'plancheAction',
-                'porteAction',
-                'porte2_colliderAction',
-                'porte_colliderAction',
-                'lockAction',
-                'keyAction'
-              ].forEach(animationName => {
+              this.door.getComponent(Animator).getClip(animationName).play()
 
-                this.door.getComponent(Animator).getClip(animationName).play()
+            })
 
-              })
+            this.papyVer.addComponentOrReplace(new utils.Delay(2000, () => {
 
-              this.papyVer.addComponentOrReplace(new utils.Delay(2000, () => {
+              this.papyVer.getComponent(Animator).getClip('papyArmatureAction').play()
 
-                this.papyVer.getComponent(Animator).getClip('papyArmatureAction').play()
+            }) )
 
-              }) )
+            this.isDoorOpen = true
 
-              this.isDoorOpen = true
+            Utils.setTimeout(() => {
 
-              Utils.setTimeout(() => {
-
-                const dialogWindow = new ui.DialogWindow({
-                  path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254945/dialogVer_qklwn9.png',
-                  offsetX: 150,
-                  offsetY: -40
-                }, true)
-                const NPCTalk: Dialog[] = [
-                  {
-                    text: `Thanks for testing!`,
+              const dialogWindow = new ui.DialogWindow({
+                path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254945/dialogVer_qklwn9.png',
+                offsetX: 140,
+                offsetY: -40
+              }, true)
+              const NPCTalk: Dialog[] = [
+                {
+                  text: `It’s more promising than I thought ...`,
+                },
+                {
+                  text: `First of all, I am very honored to meet you, a score like this, you only see once in a lifetime!`,
+                  offsetY: -20
+                },
+                {
+                  text: 'Do you want to save your score ?',
+                  isQuestion: true,
+                  labelE: {
+                    label: 'Ok'
                   },
-                  {
-                    text: `We're waiting for your feedback on discord!`,
-                    isEndOfDialog: true,
-                    triggeredByNext: () => {
-                      engine.removeEntity(this.door)
-                    },
-                  }
-                ]
-                dialogWindow.openDialogWindow(NPCTalk, 0)
+                  labelF: {
+                    label: 'No'
+                  },
+                  ifPressE: 4,
+                  ifPressF: 4,
+                  triggeredByE: () => this.scores.setScoreForLevel(1, this.scoreLevel, true),
+                  triggeredByF: () => this.scores.setScoreForLevel(1, this.scoreLevel, false)
+                },
+                {
+                  text: `Oh! how rude I am, I did not introduce myself! I have been the protector of the golden ananas since ... I don't even know …`,
+                  offsetY: -20
+                },
+                {
+                  text: `The first expeditions to find him go back to my earliest youth.`
+                },
+                {
+                  text: `I was an agile adventurer at the time and managed to complete every challenge to finally find the golden ananas.`,
+                  offsetY: -20
+                },
+                {
+                  text: `As you can see I'm getting old, and it's time for me to choose someone to take care of and protect him.`,
+                  offsetY: -20
+                },
+                {
+                  text: `It is not an easy task and only a true jumper can complete this mission.`,
+                },
+                {
+                  text: `Don't worry, the pineapple is magically protected, it only reveals itself if all the golden slices are together.`,
+                  offsetY: -20
+                },
+                {
+                  text: `They have been scattered all over the country and the secret of their location is well kept!`,
+                  offsetY: -20
+                },
+                {
+                  text: `You are good, but there is still a long way to go.`,
+                },
+                {
+                  text: `Start by looking at the top of my house, I remember hiding one of the slices over there.`,
+                  offsetY: -20,
+                  isEndOfDialog: true,
+                  triggeredByNext: () => {
+                    engine.removeEntity(this.door)
+                    this.startLevel3()
+                  },
+                }
+              ]
+              dialogWindow.openDialogWindow(NPCTalk, 0)
 
-              }, 6500)
+            }, 6500)
 
-            }
-
-          },
-          {
-            button: ActionButton.POINTER,
-            hoverText: 'Unlock!',
-            distance: 8
           }
-        )
+
+        },
+        {
+          button: ActionButton.POINTER,
+          hoverText: 'Open',
+          distance: 8
+        }
       )
-    }
-
-    const prompt = new ui.OptionPrompt(
-      `Congrats! You done the second level in ${this.scoreLevel} seconds`,
-      'Do you want to save your progression?',
-      () => {
-
-        log(`accept`)
-
-        this.scores.setScoreForLevel(1, this.scoreLevel, true)
-        onFinish()
-
-      },
-      () => {
-        log(`reject`)
-        this.scores.setScoreForLevel(1, this.scoreLevel, false)
-        onFinish()
-      },
-      'Ok',
-      'No',
-      true
     )
 
   }

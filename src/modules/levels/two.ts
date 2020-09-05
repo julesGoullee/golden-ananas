@@ -32,7 +32,7 @@ export default class LevelTwo implements Level {
     this.door.addComponentOrReplace(
       new OnPointerDown(() => {},{
         button: ActionButton.POINTER,
-        hoverText: 'You need the key !',
+        hoverText: 'Locked. Find the key to open',
         distance: 8
       })
     )
@@ -57,8 +57,8 @@ export default class LevelTwo implements Level {
         },
         {
           button: ActionButton.POINTER,
-          hoverText: 'Start level 2',
-          distance: 5
+          hoverText: 'Start',
+          distance: 3
         }
       )
     )
@@ -90,8 +90,8 @@ export default class LevelTwo implements Level {
 
         }, {
           button: ActionButton.POINTER,
-          hoverText: 'Click to finish!',
-          distance: 4
+          hoverText: 'End',
+          distance: 3
         })
     )
 

@@ -48,8 +48,8 @@ export default class LevelOne implements Level {
         },
         {
           button: ActionButton.POINTER,
-          hoverText: 'Click to start',
-          distance: 5
+          hoverText: 'Start',
+          distance: 3
         }
       )
     )
@@ -79,8 +79,8 @@ export default class LevelOne implements Level {
         },
         {
           button: ActionButton.POINTER,
-          hoverText: 'Click to finish!',
-          distance: 4
+          hoverText: 'End',
+          distance: 3
         }
       )
     )
