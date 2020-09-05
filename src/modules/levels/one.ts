@@ -63,15 +63,6 @@ export default class LevelOne implements Level {
             this.pivot.getComponent(utils.KeepRotatingComponent).stop()
             this.pivot.addComponentOrReplace(new utils.RotateTransformComponent(this.pivot.getComponent(Transform).rotation, Quaternion.Euler(0, 90, 0), 0.5) )
 
-            this.platforms.slice(1, -1).map(platform => {
-
-              platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.7, () => {
-
-                platform.getComponent(GLTFShape).visible = false
-
-              }))
-
-            })
             this.onEnd()
 
           }))
@@ -88,13 +79,12 @@ export default class LevelOne implements Level {
 
   update(){
 
-    this.platforms[0].getComponent(GLTFShape).visible = true
     this.platforms.slice(1).map(platform => {
 
       if(platform.getComponent(Transform).scale.x === 0){
         platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(0.9, 0.9, 0.9), 0.7) )
       }
-      platform.getComponent(GLTFShape).visible = true
+
     })
 
   }
@@ -103,16 +93,9 @@ export default class LevelOne implements Level {
 
     this.platforms.slice(1).map(platform => {
 
-      if(platform.getComponent(Transform).scale.x === 0.9){
+      if(platform.getComponent(Transform).scale.x !== 0){
 
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
-          platform.getComponent(GLTFShape).visible = false
-
-        }) )
-
-      } else if(platform.getComponent(Transform).scale.x === 0){
-
-        platform.getComponent(GLTFShape).visible = false
+        platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5) )
 
       }
 

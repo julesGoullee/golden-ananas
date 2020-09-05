@@ -64,7 +64,6 @@ export default class LevelTwo implements Level {
     )
 
     this.platforms[this.platforms.length -1].addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0.9, 0.9, 0.9), new Vector3(0, 0, 0) , 0.7) )
-    this.platforms[this.platforms.length -1].getComponent(GLTFShape).visible = false
 
     this.buttonEndKey = getButtonEndKey(this.pivot)
 
@@ -76,11 +75,7 @@ export default class LevelTwo implements Level {
 
             this.platforms.slice(1, -1).map(platform => {
 
-              platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0) , 0.7, () => {
-
-                platform.getComponent(GLTFShape).visible = false
-
-              }) )
+              platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0) , 0.7) )
 
             })
             engine.removeEntity(this.buttonEndKey)
@@ -139,10 +134,9 @@ export default class LevelTwo implements Level {
 
       if(i !== 0){
 
-        if(platform.getComponent(Transform).scale.x === 0.9){
+        if(platform.getComponent(Transform).scale.x !== 0){
 
           platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
-            platform.getComponent(GLTFShape).visible = false
 
             if(platform.getComponent(Transform).position.y !== i + 1) {
 
@@ -151,10 +145,6 @@ export default class LevelTwo implements Level {
             }
 
           }) )
-
-        } else if(platform.getComponent(Transform).scale.x === 0){
-
-          platform.getComponent(GLTFShape).visible = false
 
         }
 

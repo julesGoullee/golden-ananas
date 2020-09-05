@@ -130,6 +130,8 @@ class Game {
     ]).catch(error => {
 
       log(error.toString() )
+      log('Error Load level 1')
+      this.sawWelcomeMessage = false
       this.buttonStart = getButtonStart(this.pivot)
       this.platforms = getPlatform(this.pivot)
       this.timer = new Timer(this.canvas)
@@ -205,7 +207,6 @@ activate the button down here is a good start
       if(platform.getComponent(Transform).scale.x === 0){
         platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(0.9, 0.9, 0.9), 0.7) )
       }
-      platform.getComponent(GLTFShape).visible = true
       // platform.getComponent(Transform).lookAt(this.camera.position)
     })
 
@@ -218,10 +219,7 @@ activate the button down here is a good start
     log('hideCloud')
     this.platforms.slice(1).map(platform => {
 
-      platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0.9, 0.9, 0.9), new Vector3(0, 0, 0), 0.5, () => {
-        platform.getComponent(GLTFShape).visible = false
-
-      }) )
+      platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0.9, 0.9, 0.9), new Vector3(0, 0, 0), 0.5) )
 
     })
 
@@ -563,14 +561,47 @@ Anan’house.`,
       this.ananasDecoIndoor = getAnanasDeco(scene)
     }
 
-    this.level3 = new LevelThree(this.pivot, this.ananas, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel3() )
-    this.level3.init()
-    this.currentLevel = this.level3
-    this.scores.displayUserScores()
+    this.ananas.addComponentOrReplace(new Transform({
+      position: new Vector3(8, 0, 8),
+    }) )
+
+    this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananas.getComponent(Transform).scale, new Vector3(1, 1, 1), 3, () => {
+
+      this.level3 = new LevelThree(scene, this.pivot, this.ananas, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel3() )
+      this.level3.init()
+      this.currentLevel = this.level3
+      this.scores.displayUserScores()
+
+    }) )
 
   }
 
   finishLevel3(){
+
+    if (!this.isPlaying) {
+      return
+    }
+
+    this.scoreLevel = parseFloat((this.time).toFixed(2))
+    this.reset()
+    movePlayerTo({ x: 7.3, y: 0, z: 4.5 }, { x: 8, y: 2, z: 12 })
+
+    Utils.setTimeout(() => {
+
+      const dialogWindow = new ui.DialogWindow({
+        path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254945/dialogVer_qklwn9.png',
+        offsetX: 140,
+        offsetY: -40
+      }, true)
+      const NPCTalk: Dialog[] = [
+        {
+          text: `Thanks for testing. Please share yours feedbacks!`,
+          isEndOfDialog: true,
+        },
+       ]
+      dialogWindow.openDialogWindow(NPCTalk, 0)
+
+    }, 6500)
 
   }
 

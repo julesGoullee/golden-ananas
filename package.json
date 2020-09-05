@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "@dcl/crypto-utils": "^1.0.12",
-    "@dcl/ui-utils": "^1.2.0",
+    "@dcl/ui-utils": "^1.2.1",
     "@types/node": "^14.6.4",
-    "decentraland": "^3.4.5",
+    "decentraland": "^3.4.4-20200903135831.commit-46acf59",
     "decentraland-ecs": "^6.5.1-20200904222456.commit-4d77dbc",
     "decentraland-ecs-utils": "^1.1.4"
   },

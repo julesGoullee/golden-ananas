@@ -1,27 +1,29 @@
 import utils from "../../../node_modules/decentraland-ecs-utils/index"
-import getButtonEnd from "../entities/buttonEnd"
+import getPineappleSlice from "../entities/pineappleSlice"
 import Level from "./Level";
 
 export default class LevelThree implements Level {
+  scene: Entity
   pivot: Entity
   ananas: Entity
   buttonStart: Entity
-  buttonEnd: Entity
+  pineappleSlice: Entity
   platforms: Entity[]
   onStart: Function
   onEnd: Function
   lastPlatformPosition: Vector3
   failing: boolean
 
-  constructor(pivot, ananas, buttonStart, platforms, onStart, onEnd) {
+  constructor(scene, pivot, ananas, buttonStart, platforms, onStart, onEnd) {
 
+    this.scene = scene
     this.pivot = pivot
     this.ananas = ananas
     this.buttonStart = buttonStart
     this.platforms = platforms
     this.onEnd = onEnd
     this.onStart = onStart
-    this.buttonEnd = getButtonEnd(this.pivot)
+    this.pineappleSlice = getPineappleSlice(this.scene)
     this.lastPlatformPosition = this.platforms[this.platforms.length -1].getComponent(Transform).position.clone()
     this.failing = false
 
@@ -29,70 +31,52 @@ export default class LevelThree implements Level {
 
   init() {
 
-    this.ananas.addComponentOrReplace(new Transform({
-      position: new Vector3(8, 0, 8),
-    }) )
+    this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 0.5) )
 
-    this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananas.getComponent(Transform).scale, new Vector3(1, 1, 1), 4, () => {
+    this.buttonStart.addComponentOrReplace(
+      new OnPointerDown(
+        e => {
 
-      this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 0.5) )
-      this.pivot.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 36, 0) ) )
+          this.buttonStart.getComponent(Animator).getClip('boutonAction').reset()
+          this.buttonStart.getComponent(Animator).getClip('boutonAction').play()
+          this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
 
-      this.buttonStart.addComponentOrReplace(
-        new OnPointerDown(
-          e => {
+            this.onStart()
+            this.start()
 
-            this.buttonStart.getComponent(Animator).getClip('boutonAction').reset()
-            this.buttonStart.getComponent(Animator).getClip('boutonAction').play()
-            this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
+          }))
 
-              this.start()
-              this.onStart()
-
-            }))
-
-          },
-          {
-            button: ActionButton.POINTER,
-            hoverText: 'Click to start',
-            distance: 5
-          }
-        )
+        },
+        {
+          button: ActionButton.POINTER,
+          hoverText: 'Start',
+          distance: 3
+        }
       )
-      this.buttonEnd.addComponentOrReplace(
-        new OnPointerDown(
-          e => {
-
-            this.buttonEnd.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonEnd.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
-
-              this.pivot.getComponent(utils.KeepRotatingComponent).stop()
-              this.platforms.slice(1, -1).map(platform => {
-
-                platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 1, 1), new Vector3(0, 0, 0), 0.7, () => {
-
-                  platform.getComponent(GLTFShape).visible = false
-
-                }))
-
-              })
-              this.onEnd()
-
-            }))
-
-          },
-          {
-            button: ActionButton.POINTER,
-            hoverText: 'Click to finish!',
-            distance: 4
-          }
-        )
-      )
-
-    }) )
+    )
 
   }
 
   start(){
+
+    this.pivot.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 36, 0) ) )
+    const shape = new utils.TriggerBoxShape(new Vector3(1.4, 2, 0.3), new Vector3(0, 1.1, 0) )
+
+    this.pineappleSlice.addComponentOrReplace(
+
+      new utils.TriggerComponent(
+        shape,
+        0, 0, null, null,
+        () => {
+
+          this.reset()
+          this.onEnd()
+
+        },
+        () => {},
+        false
+      )
+    )
 
     this.failing = true
     this.platforms.forEach( (platform, i) => this.fallDown(platform, i + 1) )
@@ -106,14 +90,14 @@ export default class LevelThree implements Level {
 
     platform.addComponentOrReplace(new utils.MoveTransformComponent(position, new Vector3(position.x, -1, position.z), i, () => {
 
-      const transform = new Transform({
-        position: new Vector3(position.x, this.lastPlatformPosition.y, position.z),
-        scale: new Vector3(0, 0, 0)
-      })
-      // transform.lookAt(new Vector3(8, 5, 8) )
-      platform.addComponentOrReplace(transform)
-
       if(this.failing){
+
+        const transform = new Transform({
+          position: new Vector3(position.x, this.lastPlatformPosition.y, position.z),
+          scale: new Vector3(0, 0, 0)
+        })
+        // transform.lookAt(new Vector3(8, 5, 8) )
+        platform.addComponentOrReplace(transform)
 
         this.fallDown(platform, this.platforms.length)
 
@@ -129,10 +113,23 @@ export default class LevelThree implements Level {
   reset(){
 
     this.failing = false
+    this.pivot.getComponent(utils.KeepRotatingComponent).stop()
+    this.pivot.addComponentOrReplace(new utils.RotateTransformComponent(this.pivot.getComponent(Transform).rotation, Quaternion.Euler(0, 90, 0), 0.5) )
 
     this.platforms.forEach( (platform, i) => {
-      platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0.9, 0.9, 0.9), 0.5) )
+
+      if(i === 0) {
+
+        platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0.9, 0.9, 0.9), 0.5) )
+
+      } else {
+
+        platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0) )
+
+      }
+
       platform.addComponentOrReplace(new utils.MoveTransformComponent(platform.getComponent(Transform).position, new Vector3(platform.getComponent(Transform).position.x, i + 1, platform.getComponent(Transform).position.z), 0.5) )
+
     })
 
   }
