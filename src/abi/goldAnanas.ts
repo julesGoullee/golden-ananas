@@ -12,9 +12,9 @@ export default [
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "_minContrib",
-        "type": "uint256"
+        "internalType": "contract TrophyToken",
+        "name": "_trophyToken",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -25,12 +25,24 @@ export default [
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "previousAdminRole",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "newAdminRole",
+        "type": "bytes32"
       }
     ],
-    "name": "AdminAdded",
+    "name": "RoleAdminChanged",
     "type": "event"
   },
   {
@@ -38,31 +50,129 @@ export default [
     "inputs": [
       {
         "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "account",
         "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
       }
     ],
-    "name": "AdminRemoved",
+    "name": "RoleGranted",
     "type": "event"
   },
   {
-    "stateMutability": "payable",
-    "type": "fallback",
-    "payable": true
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRoleAdmin",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRoleMember",
+    "outputs": [
+      {
         "internalType": "address",
-        "name": "account",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "addAdmin",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRoleMemberCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [],
@@ -95,12 +205,35 @@ export default [
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
         "internalType": "address",
         "name": "account",
         "type": "address"
       }
     ],
-    "name": "isAdmin",
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "hasRole",
     "outputs": [
       {
         "internalType": "bool",
@@ -113,13 +246,49 @@ export default [
     "constant": true
   },
   {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
-    "name": "minContrib",
+    "name": "trophyToken",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "contract TrophyToken",
         "name": "",
-        "type": "uint256"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -127,96 +296,8 @@ export default [
     "constant": true
   },
   {
-    "inputs": [],
-    "name": "renounceAdmin",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "stateMutability": "payable",
     "type": "receive",
-    "payable": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_minContrib",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMinContrib",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract GoldenAnanasScore",
-        "name": "_goldenAnanasScore",
-        "type": "address"
-      }
-    ],
-    "name": "setGoldenAnanasScore",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract GoldenAnanasRank",
-        "name": "_goldenAnanasRank",
-        "type": "address"
-      }
-    ],
-    "name": "setGoldenAnanasRank",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_level",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_scoreLevel",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_player",
-        "type": "address"
-      }
-    ],
-    "name": "setScoreFor",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_level",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_scoreLevel",
-        "type": "uint256"
-      }
-    ],
-    "name": "setScore",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function",
     "payable": true
   },
   {
@@ -300,6 +381,104 @@ export default [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_level",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_scoreLevel",
+        "type": "uint256"
+      }
+    ],
+    "name": "setScore",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "_level",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_scoreLevel",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "batchSetScore",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_level",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_scoreLevel",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_player",
+        "type": "address"
+      }
+    ],
+    "name": "setScoreFor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract GoldenAnanasScore",
+        "name": "_goldenAnanasScore",
+        "type": "address"
+      }
+    ],
+    "name": "setGoldenAnanasScore",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract GoldenAnanasRank",
+        "name": "_goldenAnanasRank",
+        "type": "address"
+      }
+    ],
+    "name": "setGoldenAnanasRank",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract TrophyToken",
+        "name": "_trophyToken",
+        "type": "address"
+      }
+    ],
+    "name": "setTrophyToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "contract IERC20",
         "name": "_token",
         "type": "address"
@@ -311,19 +490,6 @@ export default [
       }
     ],
     "name": "withdrawToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_value",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawEth",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

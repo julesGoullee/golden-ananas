@@ -4,28 +4,41 @@ import Config from "../config/index"
 import abiGoldAnanas from "../abi/goldAnanas"
 import delay from "../../node_modules/@dcl/crypto-utils/utils/delay"
 
-export function saveScore (level, score) {
+export function saveScores(levels, scores) {
 
   return executeTask(async () => {
     try {
       const address = await getUserAccount()
       const { contract, requestManager } = await getContract(Config.contracts.goldenAnanas, abiGoldAnanas) as any
-      log('contract:saveScore', 'level', level, 'score', score)
-      const res = await contract.setScore(
-        level,
-        score,
-        {
-          from: address,
-          value: level === Config.countLevels -1 ? Config.minContribution * 10 ** 18 : 0
-        }
-      )
-      log('contract:saveScore', 'res', res)
+      log('contract:saveScores', 'levels', levels, 'scores', scores)
+
+      let res = null
+      if(levels.length === 1){
+
+        res = await contract.setScore(
+          levels[0],
+          scores[0],
+          { from: address }
+        )
+        log('contract:saveScores:setScore', 'res', res)
+
+      } else {
+
+        res = await contract.batchSetScore(
+          levels,
+          scores,
+          { from: address }
+        )
+        log('contract:saveScores:batchSetScore', 'res', res)
+
+      }
+
       let receipt = null
       while (receipt == null) {
         await delay(2000)
         receipt = await requestManager.eth_getTransactionReceipt(res.toString())
       }
-      log('contract:saveScore', 'receipt', receipt)
+      log('contract:saveScores', 'receipt', receipt)
 
     } catch (error) {
       log(error.toString())
@@ -46,7 +59,7 @@ export async function getTopRanksData() {
         const resParsed = res.length === 0 ? [] : res[0].map( (player, i) => {
           return { player, score: res[1][i].toNumber() }
         })
-        log('contract:getTopRanksData', 'level', resParsed)
+        log('contract:getTopRanksData', resParsed)
 
         return resParsed
       })
@@ -75,10 +88,13 @@ export async function getPlayerScores() {
 
       }
 
-      return {
+      const resParsed = {
         global: resScore.toNumber(),
         levels
       }
+      log('contract:getPlayerScores', resParsed)
+
+      return resParsed
 
     })
   } catch (error) {
@@ -91,5 +107,5 @@ export async function getPlayerScores() {
 export default {
   getTopRanksData,
   getPlayerScores,
-  submitScore: saveScore
+  submitScore: saveScores
 }

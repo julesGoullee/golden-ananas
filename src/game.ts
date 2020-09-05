@@ -38,9 +38,6 @@ class Game {
   sawWelcomeMessage: boolean
   isPlaying: boolean
   isDoorOpen: boolean
-  isFinishLvl1: boolean
-  isFinishLvl2: boolean
-  isFinishLvl3: boolean
 
   ground: Entity
   infoSign: Entity
@@ -72,9 +69,6 @@ class Game {
     this.sawWelcomeMessage = true
     this.isPlaying = false
     this.isDoorOpen = false
-    this.isFinishLvl1 = false
-    this.isFinishLvl2 = false
-    this.isFinishLvl3 = false
     this.platforms = []
 
     // Global entities
@@ -122,14 +116,11 @@ class Game {
         } else if(resScore.levels[1] === 0){
 
           log('Load level 2')
-          this.isFinishLvl1 = true
           this.startLevel2()
 
         } else if(resScore.levels[2] === 0){
 
           log('Load level 3')
-          this.isFinishLvl1 = true
-          this.isFinishLvl2 = true
           this.startLevel3()
 
         }
@@ -153,7 +144,7 @@ class Game {
   update() {
 
     if( (this.camera.position.x < 0 || this.camera.position.z < 0 ||
-      this.camera.position.x > 18 || this.camera.position.z > 18) && !this.isFinishLvl1 && !this.isFinishLvl2){
+      this.camera.position.x > 18 || this.camera.position.z > 18) && !this.scores.isFinishScoreLvl[0] && !this.scores.isFinishScoreLvl[1]){
 
       this.showCloud()
 
@@ -304,11 +295,10 @@ start playing.`, -140, -50)
 
   finishLevel1(){
 
-    if(!this.isPlaying || this.isFinishLvl1){
+    if(!this.isPlaying){
       return
     }
 
-    this.isFinishLvl1 = true
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
     movePlayerTo({ x: 8, y: 0, z: 0 }, { x: 8, y: 2, z: 8 })
@@ -436,11 +426,10 @@ ananhouse.`,
 
   finishLevel2(){
 
-    if (!this.isPlaying || this.isFinishLvl2) {
+    if (!this.isPlaying) {
       return
     }
 
-    this.isFinishLvl2 = true
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
     movePlayerTo({ x: 8, y: 0, z: 0 }, { x: 8, y: 2, z: 8 })

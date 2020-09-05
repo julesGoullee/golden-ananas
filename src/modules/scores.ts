@@ -1,10 +1,11 @@
-import {getTopRanksData, getPlayerScores, saveScore} from "./contract";
+import {getTopRanksData, getPlayerScores, saveScores} from "./contract";
 import Config from "../config/index";
 
 export default class Scores {
 
   scores: any
-  isSubmitScoreLvl: boolean[]
+  isSaveScoreLvl: boolean[]
+  isFinishScoreLvl: boolean[]
   ranksText: TextShape
   userScores: Entity
   userScoresText: TextShape
@@ -15,7 +16,8 @@ export default class Scores {
       levels: [],
       global: 0
     }
-    this.isSubmitScoreLvl = []
+    this.isSaveScoreLvl = []
+    this.isFinishScoreLvl = []
     this.ranksText = ranksText
     this.ranksText.value = '   PLAYER        SCORE\n'
     this.userScores = userScores
@@ -58,6 +60,16 @@ export default class Scores {
     return getPlayerScores().then(scores => {
 
       this.scores = scores;
+      this.scores.levels.forEach( (score, i) => {
+
+        if(score !== 0){
+
+          this.isFinishScoreLvl[i] = true
+          this.isSaveScoreLvl[i] = true
+
+        }
+
+      })
       return this.scores;
 
     });
@@ -66,7 +78,7 @@ export default class Scores {
 
   refreshTopRanks(){
 
-    console.log('refreshTopRanks');
+    log('refreshTopRanks');
     return getTopRanksData()
       .then((ranks) => {
 
@@ -94,7 +106,7 @@ export default class Scores {
 
     const score = parseInt( (time * 1000).toFixed(0), 10)
 
-    if(!this.isSubmitScoreLvl[level] || this.scores.levels[level] > score){
+    if(!this.isFinishScoreLvl[level] || this.scores.levels[level] > score){
 
       if(this.scores.levels[level]){
         this.scores.global -= Config.scoreBase - this.scores.levels[level]
@@ -102,12 +114,26 @@ export default class Scores {
 
       this.scores.levels[level] = score
       this.scores.global += Config.scoreBase - score
-      this.isSubmitScoreLvl[level] = true
+      this.isFinishScoreLvl[level] = true
 
       if(save){
 
-        saveScore(level,  score)
-          .then( (res) => this.refreshTopRanks() )
+        const scoresToSave = this.isFinishScoreLvl.reduce( (acc, isFinish, i) => {
+
+          if(!this.isSaveScoreLvl[i]){
+
+            acc.levels.push(i)
+            acc.scores.push(this.scores.levels[i])
+
+          }
+
+          return acc
+
+        }, { levels: [], scores: [] })
+        this.isSaveScoreLvl[level] = true
+
+        saveScores(scoresToSave.levels,  scoresToSave.scores)
+          .then( (res) => this.refreshTopRanks() );
 
       }
 
