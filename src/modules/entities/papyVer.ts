@@ -8,10 +8,22 @@ export default (pivot) => {
   const gltf = new GLTFShape("models/papyVer.glb")
   papyVer.addComponentOrReplace(gltf);
   papyVer.addComponentOrReplace(new Animator() );
-  const animState = new AnimationState('papyArmatureAction')
-  animState.speed = 1
-  animState.looping = false
-  papyVer.getComponent(Animator).addClip(animState)
+
+  [
+    'papyArmatureAction',
+    'papyScoreAction',
+    'papyAnanascopeAction',
+    'papyPositionLvl2Action',
+    'papyPositionLvl3Action',
+  ].forEach(animationName => {
+
+    const animState = new AnimationState(animationName)
+    animState.speed = 1
+    animState.looping = false
+    papyVer.getComponent(Animator).addClip(animState)
+
+  })
+
   engine.addEntity(papyVer)
   return papyVer
 }

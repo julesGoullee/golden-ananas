@@ -1,4 +1,4 @@
-Goldananas
+Golden ananas
 =============
 
 ##### Mini arcade game in decentraland metaverse.

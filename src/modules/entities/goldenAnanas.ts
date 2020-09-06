@@ -6,7 +6,7 @@ export default (pivot) => {
     // position: new Vector3(0, 0.5, 0),
     // scale: new Vector3(0.1, 0.1, 0.1)
   }) )
-  const gltfGoldenAnanas = new GLTFShape("models/goldananas.glb")
+  const gltfGoldenAnanas = new GLTFShape("models/goldenAnanas.glb")
   gltfGoldenAnanas.withCollisions = true
   gltfGoldenAnanas.visible = true
   goldenAnanas.addComponentOrReplace(gltfGoldenAnanas);

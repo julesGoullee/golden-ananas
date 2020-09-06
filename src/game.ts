@@ -20,6 +20,7 @@ import getButtonStart from "./modules/entities/buttonStart"
 import getAnanasDeco from "./modules/entities/ananasDeco"
 import getAnanasPlant from "./modules/entities/ananasPlant"
 import getPapyVer from "./modules/entities/papyVer"
+import getAnanascope from "./modules/entities/ananascope"
 
 import Level from "./modules/levels/Level";
 import LevelOne from "./modules/levels/one"
@@ -49,6 +50,7 @@ class Game {
   ananasDecoIndoor: Entity
   door: Entity
   papyVer: Entity
+  ananascope: Entity
   panneau: Entity
   ranks: Entity
   scores: Scores
@@ -317,6 +319,7 @@ performance!`,
       },
       {
         text: `At the end of each level, you can save your score to receive your badge in exchange and appear on the leaderboard.`,
+        offsetY: -20
       },
       {
         text: `Personally, it allows me to follow the best and finally find my new recruit ...`,
@@ -336,12 +339,10 @@ performance!`,
         triggeredByF: () => this.scores.setScoreForLevel(0, this.scoreLevel, false)
       },
       {
-        text: `I didn't see such crazy
-jumper since a while now...`,
+        text: `I didn't see such crazy jumper since a while now...`,
       },
       {
-        text: `I feel it.. it’s... I absolutely
-need to meet you.`,
+        text: `I feel it.. it’s... I absolutely need to meet you.`,
         isEndOfDialog: true,
         triggeredByNext: () => {
           this.startLevel2()
@@ -404,6 +405,9 @@ need to meet you.`,
         if(!this.papyVer){
           this.papyVer = getPapyVer(scene)
         }
+        if(!this.ananascope){
+          this.ananascope = getAnanascope(scene)
+        }
 
         this.scores.displayUserScores()
         const dialogWindow = new ui.DialogWindow({
@@ -413,9 +417,7 @@ need to meet you.`,
         }, true)
         const NPCTalk: Dialog[] = [
           {
-            text: `Head up, go grab the key
-and meet me in my
-Anan’house.`,
+            text: `Head up, go grab the key and meet me in my Anan’house.`,
             isEndOfDialog: true,
             triggeredByNext: () => {
               this.level2.init()
@@ -569,8 +571,14 @@ Anan’house.`,
         if(!this.ananasDecoIndoor){
           this.ananasDecoIndoor = getAnanasDeco(scene)
         }
+
         if(!this.papyVer){
           this.papyVer = getPapyVer(scene)
+          this.papyVer.getComponent(Animator).getClip('papyPositionLvl2Action').play()
+        }
+
+        if(!this.ananascope){
+          this.ananascope = getAnanascope(scene)
         }
         this.level3 = new LevelThree(scene, this.pivot, this.ananas, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel3() )
         this.currentLevel = this.level3
@@ -598,8 +606,7 @@ Anan’house.`,
 
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
-    movePlayerTo({ x: 7.3, y: 0, z: 4.5 }, { x: 8, y: 2, z: 12 })
-
+    movePlayerTo({ x: 7.3, y: 0, z: 2.5 }, { x: 8, y: 2, z: 12 })
     Utils.setTimeout(() => {
 
       const dialogWindow = new ui.DialogWindow({
@@ -609,10 +616,74 @@ Anan’house.`,
       }, true)
       const NPCTalk: Dialog[] = [
         {
-          text: `Thanks for testing. Please share yours feedbacks!`,
-          isEndOfDialog: true,
+          text: `Wow you found it! In just ${this.scoreLevel} seconds!`,
         },
-       ]
+        {
+          text: `A score like this! Hope you will save it in the leader board!`,
+        },
+        {
+          text: `Do you want to save your score?`,
+          isQuestion: true,
+          labelE: {
+            label: 'Ok'
+          },
+          labelF: {
+            label: 'No'
+          },
+          ifPressE: 3,
+          ifPressF: 3,
+          triggeredByE: () => this.scores.setScoreForLevel(2, this.scoreLevel, true),
+          triggeredByF: () => this.scores.setScoreForLevel(2, this.scoreLevel, false)
+        },
+        {
+          text: `It's been a long time since no one has ventured here, but you look like a real adventurer to me!`,
+          offsetY: -20
+        },
+        {
+          text: `You have proven to me your determination to protect our Goldenananas and keep it safe.`,
+          offsetY: -20
+        },
+        {
+          text: `I can't tell you his secret right now, but you have to know that many people are still looking for him, and not to protect him!`,
+          offsetY: -20,
+          triggeredByNext: () => {
+            log('triggeredByNext')
+            this.papyVer.getComponent(Animator).getClip('papyArmatureAction').stop()
+            this.papyVer.getComponent(Animator).getClip('papyPositionLvl2Action').stop()
+            this.papyVer.getComponent(Animator).getClip('papyAnanascopeAction').play()
+            this.ananascope.getComponent(Animator).getClip('ananascopeAction').play()
+          },
+        },
+        {
+          text: `So, to find the next slice of pineapple you will have to go to ... to ... I don't quite remember ...`,
+          offsetY: -20
+        },
+        {
+          text: `Let me look in my Ananascope ... I can't see much ...`,
+          offsetY: -20
+        },
+        {
+          text: `Ha! ... Actually no, but I know how you could help me. I would need some pennies to fix my glasses so I can read the Ananascope.`,
+          offsetY: -40
+        },
+        {
+          text: `Do you want to make a donation to support this noble quest?`,
+          offsetY: -20
+        },
+        {
+          text: `You can always come back later and click on the Ananascope to donate whenever you want.`,
+          offsetY: -20
+        },
+        {
+          text: `The second way to support us would be to share your feedback, impressions, ideas or issues with us.`,
+          offsetY: -20
+        },
+        {
+          text: `You will find our email address outside the house on the wooden sign. We can't wait to hear what you think!`,
+          offsetY: -20,
+          isEndOfDialog: true
+        },
+      ]
       dialogWindow.openDialogWindow(NPCTalk, 0)
 
     }, 1000)

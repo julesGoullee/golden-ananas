@@ -5,7 +5,7 @@ export default (pivot) => {
     position: new Vector3(0, 0, 0),
     scale: new Vector3(0, 0, 0),
   }) )
-  const gltf = new GLTFShape("models/ananasPlant.glb")
+  const gltf = new GLTFShape("models/ananasPlantSmooth.glb")
   ananasPlant.addComponentOrReplace(gltf);
   ananasPlant.addComponentOrReplace(new Animator());
 

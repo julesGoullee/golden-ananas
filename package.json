@@ -1,5 +1,5 @@
 {
-  "name": "goldananas",
+  "name": "golden-ananas",
   "version": "0.0.1",
   "description": "Come and play to the best jumping game in Genesis City! Try to reach the highest level and win the most glossy pineapple",
   "scripts": {
@@ -15,8 +15,7 @@
   },
   "devDependencies": {
     "@dcl/crypto-utils": "^1.0.12",
-    "@dcl/ui-utils": "^1.2.1",
-    "@types/node": "^14.6.4",
+    "@dcl/ui-utils": "^1.2.2",
     "decentraland": "^3.4.5",
     "decentraland-ecs": "^6.5.1-20200904222456.commit-4d77dbc",
     "decentraland-ecs-utils": "^1.1.4"

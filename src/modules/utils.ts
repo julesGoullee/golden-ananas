@@ -1,7 +1,11 @@
 import { Delay } from '../../node_modules/decentraland-ecs-utils/timer/component/delay'
 import { Interval } from '../../node_modules/decentraland-ecs-utils/timer/component/interval'
 
-export function setTimeout(cb, ms) {
+interface ITimeoutClean {
+  clearTimeout(): void
+}
+
+export function setTimeout(cb: Function, ms: number): ITimeoutClean {
 
   const ent = new Entity()
   engine.addEntity(ent)
@@ -12,14 +16,18 @@ export function setTimeout(cb, ms) {
   ent.addComponent(delay)
 
   return {
-    clearTimeout: (): void =>  {
+    clearTimeout() {
       delay.setCallback(null)
     }
   }
 
 }
 
-export function setInterval(cb, ms) {
+interface IIntervalClean {
+  clearInterval(): void
+}
+
+export function setInterval(cb, ms: number): IIntervalClean {
 
   const ent = new Entity()
   engine.addEntity(ent)
@@ -29,7 +37,7 @@ export function setInterval(cb, ms) {
   ent.addComponent(interval)
 
   return {
-    clearInterval: (): void =>  {
+    clearInterval() {
       interval.setCallback(null)
       engine.removeEntity(ent)
     }

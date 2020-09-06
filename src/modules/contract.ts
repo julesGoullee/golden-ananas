@@ -1,7 +1,7 @@
 import {getContract } from '../../node_modules/@dcl/crypto-utils/utils/contract'
 import {getUserAccount} from "@decentraland/EthereumController"
 import Config from "../config/index"
-import abiGoldAnanas from "../abi/goldAnanas"
+import abiGoldenAnanas from "../abi/goldenAnanas"
 import delay from "../../node_modules/@dcl/crypto-utils/utils/delay"
 
 export function saveScores(levels, scores) {
@@ -9,7 +9,7 @@ export function saveScores(levels, scores) {
   return executeTask(async () => {
     try {
       const address = await getUserAccount()
-      const { contract, requestManager } = await getContract(Config.contracts.goldenAnanas, abiGoldAnanas) as any
+      const { contract, requestManager } = await getContract(Config.contracts.goldenAnanas, abiGoldenAnanas) as any
       log('contract:saveScores', 'levels', levels, 'scores', scores)
 
       let res = null
@@ -52,7 +52,7 @@ export async function getTopRanksData() {
     try {
       return executeTask(async () => {
         const address = await getUserAccount()
-        const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldAnanas) as any
+        const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldenAnanas) as any
         const res = await contract.getRanks({
           from: address
         })
@@ -76,7 +76,7 @@ export async function getPlayerScores() {
     return executeTask(async () => {
 
       const address = await getUserAccount()
-      const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldAnanas) as any
+      const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldenAnanas) as any
       const resScore = await contract.getScore({ from: address })
 
       const levels = []
@@ -107,5 +107,5 @@ export async function getPlayerScores() {
 export default {
   getTopRanksData,
   getPlayerScores,
-  submitScore: saveScores
+  saveScores
 }
