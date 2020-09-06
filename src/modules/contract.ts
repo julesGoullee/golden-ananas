@@ -108,10 +108,9 @@ export async function getPlayerScores() {
 export function donation(amount){
 
   return executeTask(async () => {
-    log('donation executeTask')
 
     try {
-      await currency.send(Config.contracts.manaToken, Config.contracts.goldenAnanas, amount, true).then( () => {
+      await currency.send(Config.contracts.manaToken, Config.contracts.goldenAnanas, amount * 10 ** 18, true).then( () => {
         log('donation mined')
       })
     } catch (error) {

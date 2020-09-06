@@ -605,9 +605,8 @@ performance!`,
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
     movePlayerTo({ x: 7.3, y: 0, z: 2.5 }, { x: 8, y: 2, z: 12 })
-    log('ok')
+
     Utils.setTimeout(() => {
-      log('setTimeout')
 
       const endDialog = [
         {
@@ -635,13 +634,25 @@ performance!`,
           sourceHeight: 512
         }
       }, true)
+
+      const manaIcon = new UIImage(this.canvas, new Texture('https://res.cloudinary.com/dp7csktyw/image/upload/v1599432750/logoMana_oixe5a.png') )
+      manaIcon.visible = false
+      manaIcon.name = 'mana-icon'
+      manaIcon.width = '48px'
+      manaIcon.height = '48px'
+      manaIcon.positionY = -100
+      manaIcon.positionX = 150
+      manaIcon.sourceWidth = 2000
+      manaIcon.sourceHeight = 2000
+      manaIcon.isPointerBlocker = false
+
       let donationAmount = Config.defaultDonation
       const donationInput = new UIInputText(this.canvas)
       donationInput.visible = false
       donationInput.width = '100px'
       donationInput.vAlign = 'bottom'
       donationInput.hAlign = 'center'
-      donationInput.positionY = '150px'
+      donationInput.positionY = '200px'
       donationInput.positionX = '35px'
       const padding = 10
       donationInput.paddingTop = padding
@@ -662,9 +673,9 @@ performance!`,
 
       })
       donationInput.onTextSubmit = new OnTextSubmit((x) => {
-        log('onTextSubmit', x.text)
         donationAmount = parseInt(x.text, 10) || Config.defaultDonation
         donationInput.visible = false
+        manaIcon.visible = false
         dialogWindow.openDialogWindow(endDialog, 0)
         log('donation', donationAmount)
         donation(donationAmount)
@@ -737,12 +748,13 @@ performance!`,
 
             log('visible true')
             donationInput.visible = true
+            manaIcon.visible = true
           },
           triggeredByF: () => {}
         },
         {
           text: `Awsome! Select the amount you want to send.`,
-          offsetY: 40,
+          offsetY: -20,
           isQuestion: true,
           labelE: {
             label: 'Send'
@@ -755,10 +767,12 @@ performance!`,
           triggeredByE: () => {
             log('donation', donationAmount)
             donationInput.visible = false
+            manaIcon.visible = false
             donation(donationAmount)
           },
           triggeredByF: () => {
             donationInput.visible = false
+            manaIcon.visible = false
           },
         },
       ].concat(endDialog)
