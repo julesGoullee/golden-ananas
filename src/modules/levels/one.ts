@@ -32,7 +32,7 @@ export default class LevelOne implements Level {
       scale: new Vector3(0.5, 0.5, 0.5),
     }) )
 
-    this.pivot.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 45, 0)))
+    this.pivot.addComponentOrReplace(new utils.KeepRotatingComponent(Quaternion.Euler(0, 45, 0)))
     this.buttonStart.addComponentOrReplace(
       new OnPointerDown(
         e => {
@@ -61,9 +61,15 @@ export default class LevelOne implements Level {
 
             engine.removeEntity(this.buttonEnd)
             this.pivot.getComponent(utils.KeepRotatingComponent).stop()
-            this.pivot.addComponentOrReplace(new utils.RotateTransformComponent(this.pivot.getComponent(Transform).rotation, Quaternion.Euler(0, 90, 0), 0.5) )
+            this.platforms.slice(1).map(platform => {
 
-            this.onEnd()
+              platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0) )
+              this.pivot.addComponentOrReplace(new utils.RotateTransformComponent(this.pivot.getComponent(Transform).rotation, Quaternion.Euler(0, 90, 0), 0) )
+
+              this.onEnd()
+
+
+            })
 
           }))
 
@@ -77,27 +83,13 @@ export default class LevelOne implements Level {
     )
   }
 
-  update(){
-
-    this.platforms.slice(1).map(platform => {
-
-      if(platform.getComponent(Transform).scale.x === 0){
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(0.9, 0.9, 0.9), 0.7) )
-      }
-
-    })
-
-  }
+  update(){}
 
   reset(){
 
     this.platforms.slice(1).map(platform => {
 
-      if(platform.getComponent(Transform).scale.x !== 0){
-
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5) )
-
-      }
+      platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5) )
 
     })
 

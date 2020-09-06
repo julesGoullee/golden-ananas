@@ -71,17 +71,9 @@ export default class LevelTwo implements Level {
       new OnPointerDown(
         e => {
 
-          this.buttonEndKey.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonEndKey.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
-
-            this.platforms.slice(1, -1).map(platform => {
-
-              platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0) , 0.7) )
-
-            })
-            engine.removeEntity(this.buttonEndKey)
-            this.onEnd()
-
-          }) )
+          this.buttonEndKey.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonEndKey.getComponent(Transform).scale, new Vector3(0, 0, 0), 0))
+          engine.removeEntity(this.buttonEndKey)
+          this.onEnd()
 
         }, {
           button: ActionButton.POINTER,
@@ -94,14 +86,10 @@ export default class LevelTwo implements Level {
 
   update(){
 
-    this.platforms.forEach( (platform, i) => {
-
-      if(i === 0 || i === this.platforms.length -1){
-        return
-      }
+    this.platforms.slice(1, -1).forEach( (platform, i) => {
 
       if(this.camera.position.y > platform.getComponent(Transform).position.y + Config.userSize &&
-        this.camera.position.y < this.platforms[i + 1].getComponent(Transform).position.y + Config.userSize && !this.platformsTimer[i]){
+        this.camera.position.y < this.platforms[i + 2].getComponent(Transform).position.y + Config.userSize && !this.platformsTimer[i]){
 
         this.platformsTimer[i] = Utils.setTimeout( () => {
 
@@ -130,25 +118,13 @@ export default class LevelTwo implements Level {
 
     })
 
-    this.platforms.forEach( (platform, i) => {
+    this.platforms.slice(1).forEach( (platform, i) => {
 
-      if(i !== 0){
+      platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
 
-        if(platform.getComponent(Transform).scale.x !== 0){
+        platform.addComponentOrReplace(new utils.MoveTransformComponent(platform.getComponent(Transform).position, new Vector3(platform.getComponent(Transform).position.x, i + 2, platform.getComponent(Transform).position.z), 0.5) )
 
-          platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
-
-            if(platform.getComponent(Transform).position.y !== i + 1) {
-
-              platform.addComponentOrReplace(new utils.MoveTransformComponent(platform.getComponent(Transform).position, new Vector3(platform.getComponent(Transform).position.x, i + 1, platform.getComponent(Transform).position.z), 0.5) )
-
-            }
-
-          }) )
-
-        }
-
-      }
+      }) )
 
     })
 

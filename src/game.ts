@@ -198,14 +198,13 @@ activate the button down here is a good start
 
   showCloud(){
 
-    if(this.platforms.length === 0 || this.platforms[1].getComponent(Transform).scale.x != 0){
+    if(this.platforms.length === 0 || this.platforms[1].getComponent(Transform).scale.x !== 0){
       return
     }
-    log('showCloud')
     this.platforms.slice(1).map(platform => {
 
       if(platform.getComponent(Transform).scale.x === 0){
-        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(0.9, 0.9, 0.9), 0.7) )
+        platform.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(0.9, 0.9, 0.9), 0.5) )
       }
       // platform.getComponent(Transform).lookAt(this.camera.position)
     })
@@ -238,6 +237,7 @@ activate the button down here is a good start
     }
 
     this.timer.reset()
+    this.currentLevel.reset()
 
   }
 
@@ -557,22 +557,36 @@ Anan’house.`,
 
   startLevel3(){
 
-    if(!this.ananasDecoIndoor){
-      this.ananasDecoIndoor = getAnanasDeco(scene)
-    }
+    if(this.ananas.getComponent(Transform).scale.x !== 1){
 
-    this.ananas.addComponentOrReplace(new Transform({
-      position: new Vector3(8, 0, 8),
-    }) )
+      this.ananas.addComponentOrReplace(new Transform({
+        position: new Vector3(8, 0, 8),
+        scale: new Vector3(0, 0, 0),
+      }) )
 
-    this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananas.getComponent(Transform).scale, new Vector3(1, 1, 1), 3, () => {
+      this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananas.getComponent(Transform).scale, new Vector3(1, 1, 1), 3, () => {
+
+        if(!this.ananasDecoIndoor){
+          this.ananasDecoIndoor = getAnanasDeco(scene)
+        }
+        if(!this.papyVer){
+          this.papyVer = getPapyVer(scene)
+        }
+        this.level3 = new LevelThree(scene, this.pivot, this.ananas, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel3() )
+        this.currentLevel = this.level3
+        this.level3.init()
+        this.scores.displayUserScores()
+
+      }) )
+
+    } else {
 
       this.level3 = new LevelThree(scene, this.pivot, this.ananas, this.buttonStart, this.platforms, () => this.start(), () => this.finishLevel3() )
-      this.level3.init()
       this.currentLevel = this.level3
+      this.level3.init()
       this.scores.displayUserScores()
 
-    }) )
+    }
 
   }
 
@@ -601,7 +615,7 @@ Anan’house.`,
        ]
       dialogWindow.openDialogWindow(NPCTalk, 0)
 
-    }, 6500)
+    }, 1000)
 
   }
 

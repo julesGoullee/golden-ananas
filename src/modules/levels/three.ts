@@ -24,13 +24,14 @@ export default class LevelThree implements Level {
     this.onEnd = onEnd
     this.onStart = onStart
     this.pineappleSlice = getPineappleSlice(this.scene)
-    this.lastPlatformPosition = this.platforms[this.platforms.length -1].getComponent(Transform).position.clone()
+    this.lastPlatformPosition = this.platforms[this.platforms.length -1].getComponent(Transform).position
     this.failing = false
 
   }
 
   init() {
 
+    this.pivot.addComponentOrReplace(new utils.RotateTransformComponent(this.pivot.getComponent(Transform).rotation, Quaternion.Euler(0, 90, 0), 0.5) )
     this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 0.5) )
 
     this.buttonStart.addComponentOrReplace(
@@ -60,6 +61,7 @@ export default class LevelThree implements Level {
   start(){
 
     this.pivot.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 36, 0) ) )
+
     const shape = new utils.TriggerBoxShape(new Vector3(1.4, 2, 0.3), new Vector3(0, 1.1, 0) )
 
     this.pineappleSlice.addComponentOrReplace(
@@ -69,7 +71,6 @@ export default class LevelThree implements Level {
         0, 0, null, null,
         () => {
 
-          this.reset()
           this.onEnd()
 
         },
@@ -85,7 +86,7 @@ export default class LevelThree implements Level {
 
   fallDown(platform, i){
 
-    const position: Vector3 = platform.getComponent(Transform).position.clone()
+    const position: Vector3 = platform.getComponent(Transform).position
     platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0.9, 0.9, 0.9), 0.5) )
 
     platform.addComponentOrReplace(new utils.MoveTransformComponent(position, new Vector3(position.x, -1, position.z), i, () => {
