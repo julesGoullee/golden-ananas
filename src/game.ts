@@ -78,7 +78,7 @@ class Game {
     this.infoSign = getInfoSign(scene)
     this.pivot = getPivot(scene)
     this.ananas = getAnanas(scene)
-    this.canvas = new UICanvas()
+    this.canvas = new ui.CornerLabel('').canvas
 
     // Panneau
     this.panneau = getPanneau(scene)
