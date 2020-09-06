@@ -38,7 +38,6 @@ class Game {
   time: number
   scoreLevel: number
   interval: any
-  sawWelcomeMessage: boolean
   isPlaying: boolean
   isDoorOpen: boolean
 
@@ -70,7 +69,6 @@ class Game {
 
     this.time = 1
     this.interval = null
-    this.sawWelcomeMessage = true
     this.isPlaying = false
     this.isDoorOpen = false
     this.platforms = []
@@ -116,7 +114,7 @@ class Game {
         if(resScore.levels[0] === 0){
 
           log('Load level 1')
-          this.sawWelcomeMessage = false
+          welcomePopup()
           this.startLevel1()
 
         } else if(resScore.levels[1] === 0){
@@ -137,7 +135,8 @@ class Game {
 
       log(error.toString() )
       log('Error Load level 1')
-      this.sawWelcomeMessage = false
+      welcomePopup()
+
       this.buttonStart = getButtonStart(this.pivot)
       this.platforms = getPlatform(this.pivot)
       this.timer = new Timer(this.canvas)
@@ -169,13 +168,6 @@ class Game {
     } else {
 
       this.hideCloud()
-
-      if(!this.sawWelcomeMessage){
-
-        this.sawWelcomeMessage = true
-        welcomePopup()
-
-      }
 
     }
 
