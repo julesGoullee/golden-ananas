@@ -486,7 +486,7 @@ Anan’house.`,
                   offsetY: -20
                 },
                 {
-                  text: 'Do you want to save your score ?',
+                  text: 'Do you want to save your progress?',
                   isQuestion: true,
                   labelE: {
                     label: 'Ok'
@@ -494,8 +494,8 @@ Anan’house.`,
                   labelF: {
                     label: 'No'
                   },
-                  ifPressE: 4,
-                  ifPressF: 4,
+                  ifPressE: 3,
+                  ifPressF: 3,
                   triggeredByE: () => this.scores.setScoreForLevel(1, this.scoreLevel, true),
                   triggeredByF: () => this.scores.setScoreForLevel(1, this.scoreLevel, false)
                 },
