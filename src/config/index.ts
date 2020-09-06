@@ -2,7 +2,7 @@ const Config = {
   contracts: {
 
     // local
-    goldenAnanas: '0x407De3b78F391a75fC4F5b709E5C7aFB71174e9E', // local
+    goldenAnanas: '0x407De3b78F391a75fC4F5b709E5C7aFB71174e9E',
     manaToken: '0x9B7C4B23625e9D8A8c5542B8a92977ACbC62e601',
 
     // ropsten

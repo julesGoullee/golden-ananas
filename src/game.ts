@@ -291,8 +291,13 @@ class Game {
 
     const dialogWindow = new ui.DialogWindow({
       path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogAnanas_seb9fx.png',
-      offsetX: 100,
-      offsetY: -20
+      offsetX: -20,
+      height: 150,
+      width: 150,
+      section: {
+        sourceWidth: 512,
+        sourceHeight: 512
+      }
     }, true)
     const NPCTalk: Dialog[] = [
       {
@@ -334,6 +339,8 @@ performance!`,
     ]
 
     dialogWindow.openDialogWindow(NPCTalk, 0)
+    this.canvas.visible = true
+    this.canvas.isPointerBlocker = true
 
   }
 
@@ -458,9 +465,14 @@ performance!`,
             Utils.setTimeout(() => {
 
               const dialogWindow = new ui.DialogWindow({
-                path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254945/dialogVer_qklwn9.png',
-                offsetX: 140,
-                offsetY: -40
+                path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogVer_dx4rqo.png',
+                offsetX: -20,
+                height: 150,
+                width: 150,
+                section: {
+                  sourceWidth: 512,
+                  sourceHeight: 512
+                }
               }, true)
               const NPCTalk: Dialog[] = [
                 {
@@ -472,6 +484,7 @@ performance!`,
                 },
                 {
                   text: 'Do you want to save your progress?',
+                  offsetY: 20,
                   isQuestion: true,
                   labelE: {
                     label: 'Ok'
@@ -524,6 +537,8 @@ performance!`,
                 }
               ]
               dialogWindow.openDialogWindow(NPCTalk, 0)
+              this.canvas.visible = true
+              this.canvas.isPointerBlocker = true
 
             }, 6500)
 
@@ -748,6 +763,8 @@ performance!`,
         },
       ].concat(endDialog)
       dialogWindow.openDialogWindow(NPCTalk, 0)
+      this.canvas.visible = true
+      this.canvas.isPointerBlocker = true
 
     }, 1000)
 

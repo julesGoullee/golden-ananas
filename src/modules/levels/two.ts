@@ -36,6 +36,7 @@ export default class LevelTwo implements Level {
         distance: 8
       })
     )
+    this.buttonEndKey = getButtonEndKey(this.pivot)
 
   }
 
@@ -64,8 +65,6 @@ export default class LevelTwo implements Level {
     )
 
     this.platforms[this.platforms.length -1].addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0.9, 0.9, 0.9), new Vector3(0, 0, 0) , 0.7) )
-
-    this.buttonEndKey = getButtonEndKey(this.pivot)
 
     this.buttonEndKey.addComponentOrReplace(
       new OnPointerDown(
