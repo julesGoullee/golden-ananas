@@ -81,6 +81,8 @@ class Game {
     this.pivot = getPivot(scene)
     this.ananas = getAnanas(scene)
     this.canvas = new ui.CornerLabel('').canvas
+    this.canvas.visible = true
+    this.canvas.isPointerBlocker = true
 
     // Panneau
     this.panneau = getPanneau(scene)
@@ -746,8 +748,6 @@ performance!`,
         },
       ].concat(endDialog)
       dialogWindow.openDialogWindow(NPCTalk, 0)
-      this.canvas.visible = true
-      this.canvas.isPointerBlocker = true
 
     }, 1000)
 
