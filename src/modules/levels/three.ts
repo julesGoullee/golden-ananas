@@ -60,7 +60,7 @@ export default class LevelThree implements Level {
 
   start(){
 
-    this.pivot.addComponent(new utils.KeepRotatingComponent(Quaternion.Euler(0, 36, 0) ) )
+    this.pivot.addComponentOrReplace(new utils.KeepRotatingComponent(Quaternion.Euler(0, 36, 0) ) )
 
     const shape = new utils.TriggerBoxShape(new Vector3(1.4, 2, 0.3), new Vector3(0, 1.1, 0) )
 
