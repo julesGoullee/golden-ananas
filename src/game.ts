@@ -27,6 +27,7 @@ import Level from "./modules/levels/Level";
 import LevelOne from "./modules/levels/one"
 import LevelTwo from "./modules/levels/two";
 import LevelThree from "./modules/levels/three";
+import { donation } from "./modules/contract"
 
 class Game {
 
@@ -287,7 +288,7 @@ class Game {
     this.ananasPlant.getComponent(Animator).getClip('vibrateAction').play()
 
     const dialogWindow = new ui.DialogWindow({
-      path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254946/dialogAnanas_epfecz.png',
+      path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogAnanas_seb9fx.png',
       offsetX: 100,
       offsetY: -20
     }, true)
@@ -587,69 +588,11 @@ performance!`,
     this.scoreLevel = parseFloat((this.time).toFixed(2))
     this.reset()
     movePlayerTo({ x: 7.3, y: 0, z: 2.5 }, { x: 8, y: 2, z: 12 })
+    log('ok')
     Utils.setTimeout(() => {
+      log('setTimeout')
 
-      const dialogWindow = new ui.DialogWindow({
-        path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254945/dialogVer_qklwn9.png',
-        offsetX: 140,
-        offsetY: -40
-      }, true)
-      const NPCTalk: Dialog[] = [
-        {
-          text: `Wow you found it! In just ${this.scoreLevel} seconds!`,
-        },
-        {
-          text: `A score like this! Hope you will save it in the leader board!`,
-        },
-        {
-          text: `Do you want to save your score?`,
-          isQuestion: true,
-          labelE: {
-            label: 'Ok'
-          },
-          labelF: {
-            label: 'No'
-          },
-          ifPressE: 3,
-          ifPressF: 3,
-          triggeredByE: () => this.scores.setScoreForLevel(2, this.scoreLevel, true),
-          triggeredByF: () => this.scores.setScoreForLevel(2, this.scoreLevel, false)
-        },
-        {
-          text: `It's been a long time since no one has ventured here, but you look like a real adventurer to me!`,
-          offsetY: -20
-        },
-        {
-          text: `You have proven to me your determination to protect our Goldenananas and keep it safe.`,
-          offsetY: -20
-        },
-        {
-          text: `I can't tell you his secret right now, but you have to know that many people are still looking for him, and not to protect him!`,
-          offsetY: -20,
-          triggeredByNext: () => {
-            log('triggeredByNext')
-            this.papyVer.getComponent(Animator).getClip('papyArmatureAction').stop()
-            this.papyVer.getComponent(Animator).getClip('papyPositionLvl2Action').stop()
-            this.papyVer.getComponent(Animator).getClip('papyAnanascopeAction').play()
-            this.ananascope.getComponent(Animator).getClip('ananascopeAction').play()
-          },
-        },
-        {
-          text: `So, to find the next slice of pineapple you will have to go to ... to ... I don't quite remember ...`,
-          offsetY: -20
-        },
-        {
-          text: `Let me look in my Ananascope ... I can't see much ...`,
-          offsetY: -20
-        },
-        {
-          text: `Ha! ... Actually no, but I know how you could help me. I would need some pennies to fix my glasses so I can read the Ananascope.`,
-          offsetY: -40
-        },
-        {
-          text: `Do you want to make a donation to support this noble quest?`,
-          offsetY: -20
-        },
+      const endDialog = [
         {
           text: `You can always come back later and click on the Ananascope to donate whenever you want.`,
           offsetY: -20
@@ -664,7 +607,147 @@ performance!`,
           isEndOfDialog: true
         },
       ]
+
+      const dialogWindow = new ui.DialogWindow({
+        path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogVer_dx4rqo.png',
+        offsetX: -20,
+        height: 150,
+        width: 150,
+        section: {
+          sourceWidth: 512,
+          sourceHeight: 512
+        }
+      }, true)
+      let donationAmount = Config.defaultDonation
+      const donationInput = new UIInputText(this.canvas)
+      donationInput.visible = false
+      donationInput.width = '100px'
+      donationInput.vAlign = 'bottom'
+      donationInput.hAlign = 'center'
+      donationInput.positionY = '150px'
+      donationInput.positionX = '35px'
+      const padding = 10
+      donationInput.paddingTop = padding
+      donationInput.paddingBottom = padding
+      donationInput.paddingLeft = padding
+      donationInput.paddingRight = padding
+      donationInput.vTextAlign = 'center'
+      donationInput.fontSize = 20
+      donationInput.color = Color4.White()
+      donationInput.placeholderColor = Color4.White()
+      donationInput.placeholder = donationAmount.toString()
+      donationInput.focusedBackground = Color4.Gray()
+
+      donationInput.onChanged = new OnChanged((data: { value: string }) => {
+
+        log('onChanged', data.value)
+        donationAmount = parseInt(data.value, 10) || Config.defaultDonation
+
+      })
+      donationInput.onTextSubmit = new OnTextSubmit((x) => {
+        log('onTextSubmit', x.text)
+        donationAmount = parseInt(x.text, 10) || Config.defaultDonation
+        donationInput.visible = false
+        dialogWindow.openDialogWindow(endDialog, 0)
+        log('donation', donationAmount)
+        donation(donationAmount)
+      })
+
+      const NPCTalk: Dialog[] = [
+        {
+          text: `Wow you found it! In just ${this.scoreLevel} seconds!`,
+          offsetX: -20,
+        },
+        {
+          text: `A score like this! Hope you will save it in the leader board!`,
+        },
+        {
+          text: `Do you want to save your progress?`,
+          offsetY: 20,
+          isQuestion: true,
+          labelE: {
+            label: 'Ok'
+          },
+          labelF: {
+            label: 'No'
+          },
+          ifPressE: 3,
+          ifPressF: 3,
+          triggeredByE: () => this.scores.setScoreForLevel(2, this.scoreLevel, true),
+          triggeredByF: () => this.scores.setScoreForLevel(2, this.scoreLevel, false)
+        },
+        {
+          text: `It's been a long time since no one has ventured here, but you look like a real adventurer to me!`,
+          offsetY: -20,
+        },
+        {
+          text: `You have proven to me your determination to protect our Goldenananas and keep it safe.`,
+          offsetY: -20,
+        },
+        {
+          text: `I can't tell you his secret right now, but you have to know that many people are still looking for him, and not to protect him!`,
+          offsetY: -20,
+          triggeredByNext: () => {
+            this.papyVer.getComponent(Animator).getClip('papyArmatureAction').stop()
+            this.papyVer.getComponent(Animator).getClip('papyPositionLvl2Action').stop()
+            this.papyVer.getComponent(Animator).getClip('papyAnanascopeAction').play()
+            this.ananascope.getComponent(Animator).getClip('ananascopeAction').play()
+          },
+        },
+        {
+          text: `So, to find the next slice of pineapple you will have to go to ... to ... I don't quite remember ...`,
+          offsetY: -20,
+        },
+        {
+          text: `Let me look in my Ananascope ... I can't see much ...`,
+        },
+        {
+          text: `Ha! ... Actually no, but I know how you could help me. I would need some pennies to fix my glasses so I can read the Ananascope.`,
+          offsetY: -40,
+        },
+        {
+          text: `Do you want to make a donation to support this noble quest?`,
+          isQuestion: true,
+          labelE: {
+            label: 'Ok'
+          },
+          labelF: {
+            label: 'No'
+          },
+          ifPressE: 10,
+          ifPressF: 13,
+          triggeredByE: () => {
+
+            log('visible true')
+            donationInput.visible = true
+          },
+          triggeredByF: () => {}
+        },
+        {
+          text: `Awsome! Select the amount you want to send.`,
+          offsetY: 40,
+          isQuestion: true,
+          labelE: {
+            label: 'Send'
+          },
+          labelF: {
+            label: 'Cancel'
+          },
+          ifPressE: 11,
+          ifPressF: 9,
+          triggeredByE: () => {
+            log('donation', donationAmount)
+            donationInput.visible = false
+            donation(donationAmount)
+          },
+          triggeredByF: () => {
+            donationInput.visible = false
+          },
+        },
+      ].concat(endDialog)
       dialogWindow.openDialogWindow(NPCTalk, 0)
+      this.canvas.visible = true
+      this.canvas.isPointerBlocker = true
 
     }, 1000)
 

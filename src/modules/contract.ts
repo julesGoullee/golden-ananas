@@ -3,6 +3,7 @@ import {getUserAccount} from "@decentraland/EthereumController"
 import Config from "../config/index"
 import abiGoldenAnanas from "../abi/goldenAnanas"
 import delay from "../../node_modules/@dcl/crypto-utils/utils/delay"
+import * as currency from '../../node_modules/@dcl/crypto-utils/currency/index'
 
 export function saveScores(levels, scores) {
 
@@ -101,6 +102,24 @@ export async function getPlayerScores() {
     log(error.toString())
     return []
   }
+
+}
+
+export function donation(amount){
+
+  return executeTask(async () => {
+    log('donation executeTask')
+
+    try {
+      await currency.send(Config.contracts.manaToken, Config.contracts.goldenAnanas, amount, true).then( () => {
+        log('donation mined')
+      })
+    } catch (error) {
+      log(error.toString())
+      throw error
+    }
+
+  })
 
 }
 

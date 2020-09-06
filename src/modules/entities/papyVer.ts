@@ -15,6 +15,7 @@ export default (pivot) => {
     'papyAnanascopeAction',
     'papyPositionLvl2Action',
     'papyPositionLvl3Action',
+    // 'papyDonationAction'
   ].forEach(animationName => {
 
     const animState = new AnimationState(animationName)
