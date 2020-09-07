@@ -149,8 +149,7 @@ class Game {
     })
 
     engine.addSystem(this)
-    this.donationBox = getDonationBox(scene)
-    this.jauge = getJauge(scene)
+
   }
 
   update() {
