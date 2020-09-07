@@ -10,7 +10,7 @@ export default (pivot) => {
   donationBox.addComponentOrReplace(new Animator() );
 
   [
-    'donationBoxAction',
+    'donationBoxAction.001',
   ].forEach(animationName => {
 
     const animState = new AnimationState(animationName)

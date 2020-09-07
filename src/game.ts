@@ -21,6 +21,7 @@ import getAnanasDeco from "./modules/entities/ananasDeco"
 import getAnanasPlant from "./modules/entities/ananasPlant"
 import getPapyVer from "./modules/entities/papyVer"
 import getAnanascope from "./modules/entities/ananascope"
+import getLunettes from "./modules/entities/lunettes"
 import getDonationBox from "./modules/entities/donationBox"
 import getJauge from "./modules/entities/jauge"
 import welcomePopup from "./modules/welcomePopup"
@@ -30,6 +31,7 @@ import LevelOne from "./modules/levels/one"
 import LevelTwo from "./modules/levels/two";
 import LevelThree from "./modules/levels/three";
 import { donation } from "./modules/contract"
+import {setTimeout} from "./modules/utils";
 
 class Game {
 
@@ -57,6 +59,7 @@ class Game {
   panneau: Entity
   ranks: Entity
   donationBox: Entity
+  lunettes: Entity
   jauge: Entity
   scores: Scores
 
@@ -115,23 +118,23 @@ class Game {
         this.platforms = getPlatform(this.pivot)
         this.timer = new Timer(this.canvas)
 
-        if(resScore.levels[0] === 0){
-
-          log('Load level 1')
-          welcomePopup()
-          this.startLevel1()
-
-        } else if(resScore.levels[1] === 0){
-
-          log('Load level 2')
-          this.startLevel2()
-
-        } else if(resScore.levels[2] === 0){
+        // if(resScore.levels[0] === 0){
+        //
+        //   log('Load level 1')
+        //   welcomePopup()
+        //   this.startLevel1()
+        //
+        // } else if(resScore.levels[1] === 0){
+        //
+        //   log('Load level 2')
+        //   this.startLevel2()
+        //
+        // } else if(resScore.levels[2] === 0){
 
           log('Load level 3')
           this.startLevel3()
 
-        }
+        // }
 
       })
 
@@ -623,11 +626,23 @@ performance!`,
 
             this.donationBox = getDonationBox(scene)
             this.jauge = getJauge(scene)
+            this.lunettes = getLunettes(scene)
 
           }
 
         },
       ]
+
+      const dialogWindow1 = new ui.DialogWindow({
+        path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogVer_dx4rqo.png',
+        offsetX: -20,
+        height: 150,
+        width: 150,
+        section: {
+          sourceWidth: 512,
+          sourceHeight: 512
+        }
+      }, true)
 
       const dialogWindow = new ui.DialogWindow({
         path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogVer_dx4rqo.png',
@@ -686,6 +701,70 @@ performance!`,
         donation(donationAmount)
       })
 
+      const NPCTalk1: Dialog[] = ([
+        {
+          text: `Ha! ... Actually no, but I know how you could help me. I would need some pennies to fix my glasses so I can read the Ananascope.`,
+          triggeredByNext: () => {
+
+            this.papyVer.getComponent(Animator).getClip('papyAnanascopeAction').stop()
+            this.papyVer.getComponent(Animator).getClip('papyDonationAction').play()
+            this.ananascope.getComponent(Animator).getClip('ananascopeAction').stop()
+            this.ananascope.getComponent(Animator).getClip('ananascopeDonationAction').play()
+
+            this.donationBox = getDonationBox(scene)
+            this.jauge = getJauge(scene)
+            this.lunettes = getLunettes(scene)
+
+            this.donationBox.getComponent(Animator).getClip('donationBoxAction.001').play()
+            this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
+
+          },
+          offsetY: -40,
+        },
+        {
+          text: `Do you want to make a donation to support this noble quest?`,
+          isQuestion: true,
+          labelE: {
+            label: 'Ok'
+          },
+          labelF: {
+            label: 'No'
+          },
+          ifPressE: 2,
+          ifPressF: 5,
+          triggeredByE: () => {
+
+            log('visible true')
+            donationInput.visible = true
+            manaIcon.visible = true
+          },
+          triggeredByF: () => {}
+        },
+        {
+          text: `Awsome! Select the amount you want to send.`,
+          offsetY: -20,
+          isQuestion: true,
+          labelE: {
+            label: 'Send'
+          },
+          labelF: {
+            label: 'Cancel'
+          },
+          ifPressE: 3,
+          ifPressF: 1,
+          triggeredByE: () => {
+            log('donation', donationAmount)
+            donationInput.visible = false
+            manaIcon.visible = false
+            donation(donationAmount)
+          },
+          triggeredByF: () => {
+            donationInput.visible = false
+            manaIcon.visible = false
+          },
+        },
+      ] as Dialog[]).concat(endDialog)
+
       const NPCTalk: Dialog[] = [
         {
           text: `Wow you found it! In just ${this.scoreLevel} seconds!`,
@@ -719,13 +798,7 @@ performance!`,
         },
         {
           text: `I can't tell you his secret right now, but you have to know that many people are still looking for him, and not to protect him!`,
-          offsetY: -20,
-          triggeredByNext: () => {
-            this.papyVer.getComponent(Animator).getClip('papyArmatureAction').stop()
-            this.papyVer.getComponent(Animator).getClip('papyPositionLvl2Action').stop()
-            this.papyVer.getComponent(Animator).getClip('papyAnanascopeAction').play()
-            this.ananascope.getComponent(Animator).getClip('ananascopeAction').play()
-          },
+          offsetY: -20
         },
         {
           text: `So, to find the next slice of pineapple you will have to go to ... to ... I don't quite remember ...`,
@@ -733,54 +806,23 @@ performance!`,
         },
         {
           text: `Let me look in my Ananascope ... I can't see much ...`,
-        },
-        {
-          text: `Ha! ... Actually no, but I know how you could help me. I would need some pennies to fix my glasses so I can read the Ananascope.`,
-          offsetY: -40,
-        },
-        {
-          text: `Do you want to make a donation to support this noble quest?`,
-          isQuestion: true,
-          labelE: {
-            label: 'Ok'
-          },
-          labelF: {
-            label: 'No'
-          },
-          ifPressE: 10,
-          ifPressF: 13,
-          triggeredByE: () => {
+          isEndOfDialog: true,
+          triggeredByNext: () => {
+            this.papyVer.getComponent(Animator).getClip('papyArmatureAction').stop()
+            this.papyVer.getComponent(Animator).getClip('papyPositionLvl2Action').stop()
+            this.papyVer.getComponent(Animator).getClip('papyAnanascopeAction').play()
+            this.ananascope.getComponent(Animator).getClip('ananascopeAction').play()
 
-            log('visible true')
-            donationInput.visible = true
-            manaIcon.visible = true
+            setTimeout(() => {
+              dialogWindow1.openDialogWindow(NPCTalk1, 0)
+              this.canvas.visible = true
+              this.canvas.isPointerBlocker = true
+            }, 13000)
+
           },
-          triggeredByF: () => {}
-        },
-        {
-          text: `Awsome! Select the amount you want to send.`,
-          offsetY: -20,
-          isQuestion: true,
-          labelE: {
-            label: 'Send'
-          },
-          labelF: {
-            label: 'Cancel'
-          },
-          ifPressE: 11,
-          ifPressF: 9,
-          triggeredByE: () => {
-            log('donation', donationAmount)
-            donationInput.visible = false
-            manaIcon.visible = false
-            donation(donationAmount)
-          },
-          triggeredByF: () => {
-            donationInput.visible = false
-            manaIcon.visible = false
-          },
-        },
-      ].concat(endDialog)
+        }
+      ]
+
       dialogWindow.openDialogWindow(NPCTalk, 0)
       this.canvas.visible = true
       this.canvas.isPointerBlocker = true

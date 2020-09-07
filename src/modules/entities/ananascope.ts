@@ -11,7 +11,8 @@ export default (pivot) => {
 
   [
     'ananascopeAction',
-    'ananascopePositionLvl3Action'
+    'ananascopePositionLvl3Action',
+    'ananascopeDonationAction'
   ].forEach(animationName => {
 
     const animState = new AnimationState(animationName)
