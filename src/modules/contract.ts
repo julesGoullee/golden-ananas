@@ -1,16 +1,22 @@
-import {getContract } from '../../node_modules/@dcl/crypto-utils/utils/contract'
+import {getContract} from '../../node_modules/@dcl/crypto-utils/utils/contract'
 import {getUserAccount} from "@decentraland/EthereumController"
-import Config from "../config/index"
-import abiGoldenAnanas from "../abi/goldenAnanas"
+import * as EthConnect from '../../node_modules/eth-connect/esm'
+import { getProvider } from '@decentraland/web3-provider'
 import delay from "../../node_modules/@dcl/crypto-utils/utils/delay"
 import * as currency from '../../node_modules/@dcl/crypto-utils/currency/index'
+import Config from "../config/index"
+import abiGoldenAnanas from "../abi/goldenAnanas"
 
 export function saveScores(levels, scores) {
 
   return executeTask(async () => {
     try {
+      const provider = await getProvider()
+      const requestManagerNet = new EthConnect.RequestManager(provider)
+      const network = await requestManagerNet.net_version();
+
       const address = await getUserAccount()
-      const { contract, requestManager } = await getContract(Config.contracts.goldenAnanas, abiGoldenAnanas) as any
+      const { contract, requestManager } = await getContract(Config.contracts[network].goldenAnanas, abiGoldenAnanas) as any
       log('contract:saveScores', 'levels', levels, 'scores', scores)
 
       let res = null
@@ -52,8 +58,13 @@ export async function getTopRanksData() {
 
     try {
       return executeTask(async () => {
+
+        const provider = await getProvider()
+        const requestManager = new EthConnect.RequestManager(provider)
+        const network = await requestManager.net_version();
+
         const address = await getUserAccount()
-        const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldenAnanas) as any
+        const { contract } = await getContract(Config.contracts[network].goldenAnanas, abiGoldenAnanas) as any
         const res = await contract.getRanks({
           from: address
         })
@@ -76,8 +87,12 @@ export async function getPlayerScores() {
   try {
     return executeTask(async () => {
 
+      const provider = await getProvider()
+      const requestManager = new EthConnect.RequestManager(provider)
+      const network = await requestManager.net_version();
+
       const address = await getUserAccount()
-      const { contract } = await getContract(Config.contracts.goldenAnanas, abiGoldenAnanas) as any
+      const { contract } = await getContract(Config.contracts[network].goldenAnanas, abiGoldenAnanas) as any
       const resScore = await contract.getScore({ from: address })
 
       const levels = []
@@ -108,9 +123,12 @@ export async function getPlayerScores() {
 export function donation(amount){
 
   return executeTask(async () => {
+    const provider = await getProvider()
+    const requestManager = new EthConnect.RequestManager(provider)
+    const network = await requestManager.net_version();
 
     try {
-      await currency.send(Config.contracts.manaToken, Config.contracts.goldenAnanas, amount * 10 ** 18, true).then( () => {
+      await currency.send(Config.contracts[network].manaToken, Config.contracts[network].goldenAnanas, amount * 10 ** 18, true).then( () => {
         log('donation mined')
       })
     } catch (error) {

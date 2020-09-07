@@ -2,16 +2,22 @@ const Config = {
   contracts: {
 
     // local
-    goldenAnanas: '0x407De3b78F391a75fC4F5b709E5C7aFB71174e9E',
-    manaToken: '0x9B7C4B23625e9D8A8c5542B8a92977ACbC62e601',
+    '1234': {
+      goldenAnanas: '0x407De3b78F391a75fC4F5b709E5C7aFB71174e9E',
+      manaToken: '0x9B7C4B23625e9D8A8c5542B8a92977ACbC62e601',
+    },
 
-    // ropsten
-    // goldenAnanas: '0x24C08142dD48ca242DdC2D08220666f7F1d5bB3f'
+    // Ropsten
+    '3': {
+      goldenAnanas: '0x24C08142dD48ca242DdC2D08220666f7F1d5bB3f',
+      // manaToken: '0xCEAdf25c74608e8945e44EDb025b7f1F40609787', // fake
+      manaToken: '0x2a8Fd99c19271F4F04B1B7b9c4f7cF264b626eDB', // decentraland
+    },
 
     // Mainnet
-    // goldenAnanas: '0x6232f85F7E36657903F1A0a2b52392654A2a094D'
-    // manaToken: '0x0f5d2fb29fb7d3cfee444a200298f468908cc942'
+    '1': {
 
+    }
   },
   userSize: 1.80,
   countLevels: 3,
