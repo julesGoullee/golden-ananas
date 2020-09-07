@@ -158,8 +158,8 @@ export default class ContractOperation {
 
       try {
         const balance = (await currency.balance(Config.contracts[this.network].manaToken, Config.contracts[this.network].goldenAnanas) ) as any
-        log('balance')
-        const balanceParse = parseInt(balance, 10)
+        const balanceParse = parseInt(balance.div(10 ** 18), 10)
+
         log('goldenAnanas mana balance', balanceParse)
         return balanceParse
       } catch (error) {

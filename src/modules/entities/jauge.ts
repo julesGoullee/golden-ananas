@@ -3,7 +3,7 @@ export default (pivot) => {
   jauge.setParent(pivot)
   jauge.addComponentOrReplace(new Transform({
     position: new Vector3(8 + 6.55, 0.245, 8 + 6.49),
-    scale: new Vector3(1, 0, 1)
+    scale: new Vector3(0, 0, 0)
   }) )
   const gltf = new GLTFShape("models/jauge1.glb")
   jauge.addComponentOrReplace(gltf);

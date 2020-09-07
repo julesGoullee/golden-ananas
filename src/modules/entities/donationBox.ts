@@ -19,7 +19,6 @@ export default (pivot) => {
     donationBox.getComponent(Animator).addClip(animState)
 
   })
-  donationBox.getComponent(Animator).getClip('donationBoxAction').play()
 
   engine.addEntity(donationBox)
   return donationBox

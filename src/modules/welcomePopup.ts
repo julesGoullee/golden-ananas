@@ -10,7 +10,7 @@ export default () => {
   prompt.addText('Welcome to the Golden Ananas Challenge!', 0, 230, Color4.White(), 20)
   const content = prompt.addText(`            Do you think you're ready ?! 
          
-The propose is to activate the button above.
+The challenge is to activate the button above.
 Jump on the cloud, activate the button down
 here is a good start
 `, -140, -170)

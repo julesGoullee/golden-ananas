@@ -15,7 +15,8 @@ const Config = {
 
     // Mainnet
     '1': {
-
+      goldenAnanas: '',
+      manaToken: '',
     }
   },
   userSize: 1.80,

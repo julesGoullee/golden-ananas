@@ -116,34 +116,39 @@ class Game {
         this.scores = new Scores(this.contractOperation, this.ranks.getComponent(TextShape), userScores)
       })
       .then( () => Promise.all([
-        this.scores.refreshTopRanks(),
-        this.scores.getPlayerScores().then( (resScore: any) => {
+          this.scores.refreshTopRanks(),
+          this.scores.getPlayerScores().then( (resScore: any) => {
 
-          this.buttonStart = getButtonStart(this.pivot)
-          this.platforms = getPlatform(this.pivot)
-          this.timer = new Timer(this.canvas)
+            this.buttonStart = getButtonStart(this.pivot)
+            this.platforms = getPlatform(this.pivot)
+            this.timer = new Timer(this.canvas)
 
-          if(resScore.levels[0] === 0){
+            if(resScore.levels[0] === 0){
 
-            log('Load level 1')
-            welcomePopup()
-            this.startLevel1()
+              log('Load level 1')
+              welcomePopup()
+              this.startLevel1()
 
-          } else if(resScore.levels[1] === 0){
+            } else if(resScore.levels[1] === 0){
 
-            log('Load level 2')
-            this.startLevel2()
+              log('Load level 2')
+              this.startLevel2()
 
-          } else if(resScore.levels[2] === 0){
+            } else if(resScore.levels[2] === 0){
 
-          log('Load level 3')
-          this.startLevel3()
+              log('Load level 3')
+              this.startLevel3()
 
-          }
+            } else {
 
-        })
-      ])
-    ).catch(error => {
+              log('Load levels finish')
+              this.levelsFinish()
+
+            }
+
+          })
+        ])
+      ).catch(error => {
 
       log(error.toString() )
       log('Error Load level 1')
@@ -163,7 +168,7 @@ class Game {
   update() {
 
     if( (this.camera.position.x < 0 || this.camera.position.z < 0 ||
-      this.camera.position.x > 18 || this.camera.position.z > 18) && this.scores && !this.scores.isFinishScoreLvl[0] && !this.scores.isFinishScoreLvl[1]){
+      this.camera.position.x > 18 || this.camera.position.z > 18) && this.scores && !this.scores.isFinishScoreLvl[0] && !this.scores.isFinishScoreLvl[1] && !this.scores.isFinishScoreLvl[2]){
 
       this.showCloud()
 
@@ -719,7 +724,7 @@ performance!`,
 
             this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
-              this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
+              this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
 
             })
 
@@ -770,7 +775,7 @@ performance!`,
                     this.jauge = getJauge(scene)
                   }
 
-                  this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(this.jauge.getComponent(Transform).scale, new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
+                  this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
 
                 })
               )
@@ -825,6 +830,8 @@ performance!`,
           text: `Let me look in my Ananascope ... I can't see much ...`,
           isEndOfDialog: true,
           triggeredByNext: () => {
+
+            this.scores.displayUserScores()
             this.papyVer.getComponent(Animator).getClip('papyArmatureAction').stop()
             this.papyVer.getComponent(Animator).getClip('papyPositionLvl2Action').stop()
             this.papyVer.getComponent(Animator).getClip('papyAnanascopeAction').play()
@@ -846,6 +853,53 @@ performance!`,
 
     }, 1000)
 
+  }
+
+  levelsFinish(){
+
+    this.platforms[0].addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 1) )
+
+    if(this.ananas.getComponent(Transform).scale.x !== 1){
+
+      this.ananas.addComponentOrReplace(new Transform({
+        position: new Vector3(8, 0, 8),
+        scale: new Vector3(0, 0, 0),
+      }) )
+
+      this.ananas.addComponentOrReplace(new utils.ScaleTransformComponent(this.ananas.getComponent(Transform).scale, new Vector3(1, 1, 1), 3, () => {
+
+        if(!this.ananasDecoIndoor){
+          this.ananasDecoIndoor = getAnanasDeco(scene)
+        }
+
+        if(!this.papyVer){
+          this.papyVer = getPapyVer(scene)
+          this.papyVer.getComponent(Animator).getClip('papyPositionLvl3Action').play()
+        }
+
+        if(!this.ananascope){
+          this.ananascope = getAnanascope(scene)
+          this.ananascope.getComponent(Animator).getClip('ananascopePositionLvl3Action').play()
+
+        }
+        this.scores.displayUserScores()
+
+        this.donationBox = getDonationBox(scene)
+        this.jauge = getJauge(scene)
+        this.lunettes = getLunettes(scene)
+
+        this.donationBox.getComponent(Animator).getClip('donationBoxAction.001').play()
+        this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
+
+        this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
+
+          this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+
+        })
+
+      }) )
+
+    }
   }
 
 }
