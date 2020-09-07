@@ -21,6 +21,8 @@ import getAnanasDeco from "./modules/entities/ananasDeco"
 import getAnanasPlant from "./modules/entities/ananasPlant"
 import getPapyVer from "./modules/entities/papyVer"
 import getAnanascope from "./modules/entities/ananascope"
+import getDonationBox from "./modules/entities/donationBox"
+import getJauge from "./modules/entities/jauge"
 import welcomePopup from "./modules/welcomePopup"
 
 import Level from "./modules/levels/Level";
@@ -54,6 +56,8 @@ class Game {
   ananascope: Entity
   panneau: Entity
   ranks: Entity
+  donationBox: Entity
+  jauge: Entity
   scores: Scores
 
   buttonStart: Entity
@@ -145,7 +149,8 @@ class Game {
     })
 
     engine.addSystem(this)
-
+    this.donationBox = getDonationBox(scene)
+    this.jauge = getJauge(scene)
   }
 
   update() {
@@ -600,6 +605,8 @@ performance!`,
 
     Utils.setTimeout(() => {
 
+      this.platforms[0].addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 1) )
+
       const endDialog = [
         {
           text: `You can always come back later and click on the Ananascope to donate whenever you want.`,
@@ -612,7 +619,14 @@ performance!`,
         {
           text: `You will find our email address outside the house on the wooden sign. We can't wait to hear what you think!`,
           offsetY: -20,
-          isEndOfDialog: true
+          isEndOfDialog: true,
+          triggeredByNext: () => {
+
+            this.donationBox = getDonationBox(scene)
+            this.jauge = getJauge(scene)
+
+          }
+
         },
       ]
 
