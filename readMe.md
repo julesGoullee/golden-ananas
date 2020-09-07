@@ -51,6 +51,7 @@ We plan to distribute for each fundraiser contributor a collectible that represe
 	
 - When all levels are done, allow the player to re-play any levels to increase his score on the leader board.  
 - We put down different gameplay blocks, let's combine them to build much more complex levels.  
+- Obviously imagine the next chapters of the game!  
 
 ### Let's try it:
 
