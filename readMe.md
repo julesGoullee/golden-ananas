@@ -14,7 +14,7 @@ Within a week and our knowledge in [Decentraland](https://decentraland.org) ecos
 We keep in mind our experience playing the scene a few months ago during the public launch, rules are not clear, what I have to do now?  
 I spend so much time on this scene not because it's difficult, or the gameplay is challenging, just because I don't understand what to do.  
 So we arrive at the conclusion: let's proof we can build an easy to understand, with a game flow chained perfectly in decentraland:  
-simple, small, beautifull.
+simple, small, beautiful.
 
 ### Concept:
 
