@@ -140,6 +140,27 @@ export function donation(amount){
 
 }
 
+export function getGoldenAnanasManaBalance(){
+
+  return executeTask(async () => {
+
+    const provider = await getProvider()
+    const requestManager = new EthConnect.RequestManager(provider)
+    const network = await requestManager.net_version();
+
+    try {
+      const balance = (await currency.balance(Config.contracts[network].manaToken, Config.contracts[network].goldenAnanas) ) as any
+      const balanceParse = parseInt(balance, 10) / 10 ** 18
+      log('goldenAnanas mana balance', balanceParse)
+      return balanceParse
+    } catch (error) {
+      log(error.toString())
+      throw error
+    }
+
+  })
+
+}
 export default {
   getTopRanksData,
   getPlayerScores,

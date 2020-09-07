@@ -22,6 +22,7 @@ const Config = {
   userSize: 1.80,
   countLevels: 3,
   scoreBase: 100000,
+  manaContributionGoal: 50000,
   defaultDonation: 10
 }
 

@@ -30,7 +30,7 @@ import Level from "./modules/levels/Level";
 import LevelOne from "./modules/levels/one"
 import LevelTwo from "./modules/levels/two";
 import LevelThree from "./modules/levels/three";
-import { donation } from "./modules/contract"
+import { donation, getGoldenAnanasManaBalance } from "./modules/contract"
 import {setTimeout} from "./modules/utils";
 
 class Game {
@@ -624,10 +624,6 @@ performance!`,
           isEndOfDialog: true,
           triggeredByNext: () => {
 
-            this.donationBox = getDonationBox(scene)
-            this.jauge = getJauge(scene)
-            this.lunettes = getLunettes(scene)
-
           }
 
         },
@@ -718,6 +714,12 @@ performance!`,
             this.donationBox.getComponent(Animator).getClip('donationBoxAction.001').play()
             this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
 
+            getGoldenAnanasManaBalance().then( (balance) => {
+
+              this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, balance / Config.manaContributionGoal, 1), 2) )
+
+            })
+
           },
           offsetY: -40,
         },
@@ -731,7 +733,7 @@ performance!`,
             label: 'No'
           },
           ifPressE: 2,
-          ifPressF: 5,
+          ifPressF: 3,
           triggeredByE: () => {
 
             log('visible true')
@@ -756,7 +758,19 @@ performance!`,
             log('donation', donationAmount)
             donationInput.visible = false
             manaIcon.visible = false
-            donation(donationAmount)
+            donation(donationAmount).then(() => {
+
+              getGoldenAnanasManaBalance().then( (balance) => {
+
+                if(!this.jauge){
+                  this.jauge = getJauge(scene)
+                }
+
+                this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(this.jauge.getComponent(Transform).scale, new Vector3(1, balance / Config.manaContributionGoal, 1), 2) )
+
+              })
+
+            })
           },
           triggeredByF: () => {
             donationInput.visible = false
