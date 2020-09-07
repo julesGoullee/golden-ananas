@@ -4,9 +4,7 @@ export default (pivot) => {
   buttonEnd.setParent(pivot)
   buttonEnd.addComponentOrReplace(
     new Transform({
-      position: new Vector3(5, 11, 0),
-      // position: new Vector3(6, 2, -3),
-      rotation: Quaternion.Euler(0, 180, 0),
+      position: new Vector3(5, 11, 2),
       scale: new Vector3(0.5, 0.5, 0.5)
     })
   )

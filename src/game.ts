@@ -159,7 +159,7 @@ class Game {
 
       this.currentLevel.reset()
       this.reset()
-      this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 3))
+      this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, 1, 1), 2))
 
     } else if(this.isPlaying){
 

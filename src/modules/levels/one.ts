@@ -37,11 +37,10 @@ export default class LevelOne implements Level {
       new OnPointerDown(
         e => {
 
-          this.buttonStart.getComponent(Animator).getClip('boutonAction').reset()
-          this.buttonStart.getComponent(Animator).getClip('boutonAction').play()
+          this.buttonStart.getComponent(Animator).getClip('buttonAction').play()
+          this.onStart()
           this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
-
-            this.onStart()
+            this.buttonStart.getComponent(Animator).getClip('buttonAction').stop()
 
           }))
 
