@@ -118,23 +118,23 @@ class Game {
         this.platforms = getPlatform(this.pivot)
         this.timer = new Timer(this.canvas)
 
-        // if(resScore.levels[0] === 0){
-        //
-        //   log('Load level 1')
-        //   welcomePopup()
-        //   this.startLevel1()
-        //
-        // } else if(resScore.levels[1] === 0){
-        //
-        //   log('Load level 2')
-        //   this.startLevel2()
-        //
-        // } else if(resScore.levels[2] === 0){
+        if(resScore.levels[0] === 0){
+
+          log('Load level 1')
+          welcomePopup()
+          this.startLevel1()
+
+        } else if(resScore.levels[1] === 0){
+
+          log('Load level 2')
+          this.startLevel2()
+
+        } else if(resScore.levels[2] === 0){
 
           log('Load level 3')
           this.startLevel3()
 
-        // }
+        }
 
       })
 
