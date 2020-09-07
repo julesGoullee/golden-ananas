@@ -42,8 +42,8 @@ We plan to distribute for each contributor a collectible that represents the mis
 
 ##### To do:
 	
-When all levels are done, allow the player to re-play any levels to increase his score in the lead board!
-We put down different gameplay block, let's combine then to build much more complex level.
+- When all levels are done, allow the player to re-play any levels to increase his score in the lead board!
+- We put down different gameplay block, let's combine then to build much more complex level.
 
 ### Let's try it:
 
