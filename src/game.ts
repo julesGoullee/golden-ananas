@@ -30,7 +30,7 @@ import Level from "./modules/levels/Level";
 import LevelOne from "./modules/levels/one"
 import LevelTwo from "./modules/levels/two";
 import LevelThree from "./modules/levels/three";
-import { donation, getGoldenAnanasManaBalance } from "./modules/contract"
+import ContractOperation from "./modules/contractOperation"
 import {setTimeout} from "./modules/utils";
 
 class Game {
@@ -39,6 +39,7 @@ class Game {
 
   pivot: Entity
   timer: Timer
+  contractOperation: ContractOperation
   time: number
   scoreLevel: number
   interval: any
@@ -94,7 +95,6 @@ class Game {
     this.ranks = getRanks(this.panneau)
     const userScores = new Entity('userScores')
     userScores.setParent(scene)
-    this.scores = new Scores(this.ranks.getComponent(TextShape), userScores)
 
     this.panneau.addComponentOrReplace(
       new OnPointerDown(
@@ -110,35 +110,40 @@ class Game {
     )
 
     // Levels
-    Promise.all([
-      this.scores.refreshTopRanks(),
-      this.scores.getPlayerScores().then( (resScore: any) => {
+    ContractOperation.getNetwork()
+      .then( (network) => {
+        this.contractOperation = new ContractOperation(network)
+        this.scores = new Scores(this.contractOperation, this.ranks.getComponent(TextShape), userScores)
+      })
+      .then( () => Promise.all([
+        this.scores.refreshTopRanks(),
+        this.scores.getPlayerScores().then( (resScore: any) => {
 
-        this.buttonStart = getButtonStart(this.pivot)
-        this.platforms = getPlatform(this.pivot)
-        this.timer = new Timer(this.canvas)
+          this.buttonStart = getButtonStart(this.pivot)
+          this.platforms = getPlatform(this.pivot)
+          this.timer = new Timer(this.canvas)
 
-        if(resScore.levels[0] === 0){
+          if(resScore.levels[0] === 0){
 
-          log('Load level 1')
-          welcomePopup()
-          this.startLevel1()
+            log('Load level 1')
+            welcomePopup()
+            this.startLevel1()
 
-        } else if(resScore.levels[1] === 0){
+          } else if(resScore.levels[1] === 0){
 
-          log('Load level 2')
-          this.startLevel2()
+            log('Load level 2')
+            this.startLevel2()
 
-        } else if(resScore.levels[2] === 0){
+          } else if(resScore.levels[2] === 0){
 
           log('Load level 3')
           this.startLevel3()
 
-        }
+          }
 
-      })
-
-    ]).catch(error => {
+        })
+      ])
+    ).catch(error => {
 
       log(error.toString() )
       log('Error Load level 1')
@@ -158,7 +163,7 @@ class Game {
   update() {
 
     if( (this.camera.position.x < 0 || this.camera.position.z < 0 ||
-      this.camera.position.x > 18 || this.camera.position.z > 18) && !this.scores.isFinishScoreLvl[0] && !this.scores.isFinishScoreLvl[1]){
+      this.camera.position.x > 18 || this.camera.position.z > 18) && this.scores && !this.scores.isFinishScoreLvl[0] && !this.scores.isFinishScoreLvl[1]){
 
       this.showCloud()
 
@@ -609,26 +614,6 @@ performance!`,
 
       this.platforms[0].addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 1) )
 
-      const endDialog = [
-        {
-          text: `You can always come back later and click on the Ananascope to donate whenever you want.`,
-          offsetY: -20
-        },
-        {
-          text: `The second way to support us would be to share your feedback, impressions, ideas or issues with us.`,
-          offsetY: -20
-        },
-        {
-          text: `You will find our email address outside the house on the wooden sign. We can't wait to hear what you think!`,
-          offsetY: -20,
-          isEndOfDialog: true,
-          triggeredByNext: () => {
-
-          }
-
-        },
-      ]
-
       const dialogWindow1 = new ui.DialogWindow({
         path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogVer_dx4rqo.png',
         offsetX: -20,
@@ -651,6 +636,24 @@ performance!`,
         }
       }, true)
 
+      const endDialog = [
+        {
+          text: `You can always come back later and click on the Ananascope to donate whenever you want.`,
+          offsetY: -20
+        },
+        {
+          text: `The second way to support us would be to share your feedback, impressions, ideas or issues with us.`,
+          offsetY: -20
+        },
+        {
+          text: `You will find our email address outside the house on the wooden sign. We can't wait to hear what you think!`,
+          offsetY: -20,
+          isEndOfDialog: true,
+          triggeredByNext: () => {
+            dialogWindow1.closeDialogWindow()
+          }
+        },
+      ]
       const manaIcon = new UIImage(this.canvas, new Texture('https://res.cloudinary.com/dp7csktyw/image/upload/v1599432750/logoMana_oixe5a.png') )
       manaIcon.visible = false
       manaIcon.name = 'mana-icon'
@@ -694,7 +697,7 @@ performance!`,
         manaIcon.visible = false
         dialogWindow.openDialogWindow(endDialog, 0)
         log('donation', donationAmount)
-        donation(donationAmount)
+        this.contractOperation.donation(donationAmount)
       })
 
       const NPCTalk1: Dialog[] = ([
@@ -714,9 +717,9 @@ performance!`,
             this.donationBox.getComponent(Animator).getClip('donationBoxAction.001').play()
             this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
 
-            getGoldenAnanasManaBalance().then( (balance) => {
+            this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
-              this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, balance / Config.manaContributionGoal, 1), 2) )
+              this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
 
             })
 
@@ -758,19 +761,19 @@ performance!`,
             log('donation', donationAmount)
             donationInput.visible = false
             manaIcon.visible = false
-            donation(donationAmount).then(() => {
+            this.contractOperation.donation(donationAmount)
+              .then( () => this.contractOperation.getGoldenAnanasManaBalance()
+                .then( (balance) => {
 
-              getGoldenAnanasManaBalance().then( (balance) => {
+                  log('baafegw', balance)
+                  if(!this.jauge){
+                    this.jauge = getJauge(scene)
+                  }
 
-                if(!this.jauge){
-                  this.jauge = getJauge(scene)
-                }
+                  this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(this.jauge.getComponent(Transform).scale, new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
 
-                this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(this.jauge.getComponent(Transform).scale, new Vector3(1, balance / Config.manaContributionGoal, 1), 2) )
-
-              })
-
-            })
+                })
+              )
           },
           triggeredByF: () => {
             donationInput.visible = false

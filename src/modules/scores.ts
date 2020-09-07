@@ -1,8 +1,9 @@
-import {getTopRanksData, getPlayerScores, saveScores} from "./contract";
-import Config from "../config/index";
+import Config from "../config/index"
+import ContractOperation from "./contractOperation"
 
 export default class Scores {
 
+  contractOperation: ContractOperation
   scores: any
   isSaveScoreLvl: boolean[]
   isFinishScoreLvl: boolean[]
@@ -10,7 +11,7 @@ export default class Scores {
   userScores: Entity
   userScoresText: TextShape
 
-  constructor(ranksText, userScores){
+  constructor(contractOperation, ranksText, userScores){
 
     this.scores = {
       levels: [],
@@ -18,6 +19,7 @@ export default class Scores {
     }
     this.isSaveScoreLvl = []
     this.isFinishScoreLvl = []
+    this.contractOperation = contractOperation
     this.ranksText = ranksText
     this.ranksText.value = '   PLAYER        SCORE\n'
     this.userScores = userScores
@@ -57,7 +59,7 @@ export default class Scores {
 
   getPlayerScores(){
 
-    return getPlayerScores().then(scores => {
+    return this.contractOperation.getPlayerScores().then(scores => {
 
       this.scores = scores;
       this.scores.levels.forEach( (score, i) => {
@@ -79,7 +81,7 @@ export default class Scores {
   refreshTopRanks(){
 
     log('refreshTopRanks');
-    return getTopRanksData()
+    return this.contractOperation.getTopRanksData()
       .then((ranks) => {
 
         let ranksTextContent = '   PLAYER        SCORE\n'
@@ -132,7 +134,7 @@ export default class Scores {
         }, { levels: [], scores: [] })
         this.isSaveScoreLvl[level] = true
 
-        saveScores(scoresToSave.levels,  scoresToSave.scores)
+        this.contractOperation.saveScores(scoresToSave.levels,  scoresToSave.scores)
           .then( (res) => this.refreshTopRanks() );
 
       }
