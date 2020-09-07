@@ -3,8 +3,8 @@ Gold’Ananas
 
 Game build for decentraland metaverse in the context of the game jam 2020.
 Try to reach the highest level and win the most glossy pineapple!  
-=> Chain reaction: let's go into.
 
+=> Chain reaction: let's go into.
 
 ![alt text](https://github.com/julesGoullee/golden-ananas/blob/master/screenshots/screenStart.png "screenStart")
 
@@ -30,7 +30,7 @@ When you come back on the scene it will automatically load the level to continue
 Smart contract source repository: [https://github.com/julesGoullee/golden-ananas-contract](https://github.com/julesGoullee/golden-ananas-contract)
 
 
-≈ Next steps:
+### Next steps:
 
 We decide to make something fine-tuned, well packaged in place or building much more stuff.  
 As independent creative persons, we need funding in order to continue to work on this project.  
