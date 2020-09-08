@@ -950,7 +950,7 @@ performance!`,
     }) )
     engine.addEntity(donationClick)
 
-    donationClick.addComponentOrReplace(new utils.Delay(500, () => {
+    donationClick.addComponentOrReplace(new utils.Delay(1000, () => {
       donationClick.addComponentOrReplace(new Transform({
         position: new Vector3(14.5, 0, 14.5),
         scale: new Vector3(2, 11, 2)
