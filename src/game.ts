@@ -1034,7 +1034,7 @@ performance!`,
           button: ActionButton.POINTER,
           hoverText: 'Unlock the glasses NFT',
           showFeedback: true,
-          distance: 2
+          distance: 8
         }
       ) )
   }
