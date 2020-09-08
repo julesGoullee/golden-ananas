@@ -5,6 +5,7 @@ export default (pivot) => {
   buttonEnd.addComponentOrReplace(
     new Transform({
       position: new Vector3(5, 11, 2),
+      rotation: Quaternion.Euler(0, -125, 0),
       scale: new Vector3(0.5, 0.5, 0.5)
     })
   )
@@ -12,9 +13,8 @@ export default (pivot) => {
   buttonEnd.addComponentOrReplace(new Animator())
 
   const animNames = [
-    'aile5.001Action.001',
-    'aile8.001Action.001',
-    'Lvl1Action'
+    'aileGAction',
+    'aileDAction'
   ]
 
   animNames.forEach(animationName => {
