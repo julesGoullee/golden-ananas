@@ -328,6 +328,10 @@ performance!`,
         offsetY: -20
       },
       {
+        text: `Please ensure you're connected to ropsten network`,// TODO rm
+        offsetY: -20
+      },
+      {
         text: `Personally, it allows me to follow the best and finally find my new recruit ...`,
       },
       {
@@ -339,8 +343,8 @@ performance!`,
         labelF: {
           label: 'No'
         },
-        ifPressE: 4,
-        ifPressF: 4,
+        ifPressE: 5,
+        ifPressF: 5,
         triggeredByE: () => this.scores.setScoreForLevel(0, this.scoreLevel, true),
         triggeredByF: () => this.scores.setScoreForLevel(0, this.scoreLevel, false)
       },
