@@ -450,7 +450,6 @@ performance!`,
     this.reset()
     movePlayerTo({ x: 8, y: 0, z: 0 }, { x: 8, y: 2, z: 8 })
 
-    this.scores.displayUserScores()
     this.door.addComponentOrReplace(
       new OnPointerDown(
         e => {
@@ -512,8 +511,14 @@ performance!`,
                   },
                   ifPressE: 3,
                   ifPressF: 3,
-                  triggeredByE: () => this.scores.setScoreForLevel(1, this.scoreLevel, true),
-                  triggeredByF: () => this.scores.setScoreForLevel(1, this.scoreLevel, false)
+                  triggeredByE: () => {
+                    this.scores.setScoreForLevel(1, this.scoreLevel, true)
+                    this.scores.displayUserScores()
+                  },
+                  triggeredByF: () => {
+                    this.scores.setScoreForLevel(1, this.scoreLevel, false)
+                    this.scores.displayUserScores()
+                  }
                 },
                 {
                   text: `Oh! how rude I am, I did not introduce myself! I have been the protector of the golden ananas since ... I don't even know …`,
@@ -800,8 +805,16 @@ performance!`,
           },
           ifPressE: 3,
           ifPressF: 3,
-          triggeredByE: () => this.scores.setScoreForLevel(2, this.scoreLevel, true),
-          triggeredByF: () => this.scores.setScoreForLevel(2, this.scoreLevel, false)
+          triggeredByE: () => {
+            this.scores.setScoreForLevel(2, this.scoreLevel, true)
+            this.scores.displayUserScores()
+
+          },
+          triggeredByF: () => {
+            this.scores.setScoreForLevel(2, this.scoreLevel, false)
+            this.scores.displayUserScores()
+
+          }
         },
         {
           text: `It's been a long time since no one has ventured here, but you look like a real adventurer to me!`,
@@ -824,7 +837,6 @@ performance!`,
           isEndOfDialog: true,
           triggeredByNext: () => {
 
-            this.scores.displayUserScores()
             this.papyVer.getComponent(Animator).getClip('papyArmatureAction').stop()
             this.papyVer.getComponent(Animator).getClip('papyPositionLvl2Action').stop()
             this.papyVer.getComponent(Animator).getClip('papyAnanascopeAction').play()
@@ -885,7 +897,7 @@ performance!`,
 
         this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
-          this.jauge.addComponentOrReplace(new utils.Delay(4000, () => {
+          this.jauge.addComponentOrReplace(new utils.Delay(5000, () => {
 
             this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
 
@@ -898,10 +910,6 @@ performance!`,
       }) )
 
     }
-
-  }
-
-  refreshDonationBox(){
 
   }
 
