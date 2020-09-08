@@ -23,6 +23,7 @@ import getPapyVer from "./modules/entities/papyVer"
 import getAnanascope from "./modules/entities/ananascope"
 import getLunettes from "./modules/entities/lunettes"
 import getDonationBox from "./modules/entities/donationBox"
+import getDonationProgress from "./modules/entities/donationProgress"
 import getJauge from "./modules/entities/jauge"
 import getManaIcon from "./modules/entities/manaIcon"
 import getDonationInput from "./modules/entities/donationInput"
@@ -62,6 +63,7 @@ class Game {
   panneau: Entity
   ranks: Entity
   donationBox: Entity
+  donationProgress: Entity[]
   lunettes: Entity
   jauge: Entity
   scores: Scores
@@ -117,39 +119,39 @@ class Game {
         this.contractOperation = new ContractOperation(network)
         this.scores = new Scores(this.contractOperation, this.ranks.getComponent(TextShape), userScores)
       }).then( () => Promise.all([
-          this.scores.refreshTopRanks(),
-          this.scores.getPlayerScores().then( (resScore: any) => {
+        this.scores.refreshTopRanks(),
+        this.scores.getPlayerScores().then( (resScore: any) => {
 
-            this.buttonStart = getButtonStart(this.pivot)
-            this.platforms = getPlatform(this.pivot)
-            this.timer = new Timer(this.canvas)
+          this.buttonStart = getButtonStart(this.pivot)
+          this.platforms = getPlatform(this.pivot)
+          this.timer = new Timer(this.canvas)
 
-            if(resScore.levels[0] === 0){
+          if(resScore.levels[0] === 0){
 
-              log('Load level 1')
-              welcomePopup()
-              this.startLevel1()
+            log('Load level 1')
+            welcomePopup()
+            this.startLevel1()
 
-            } else if(resScore.levels[1] === 0){
+          } else if(resScore.levels[1] === 0){
 
-              log('Load level 2')
-              this.startLevel2()
+            log('Load level 2')
+            this.startLevel2()
 
-            } else if(resScore.levels[2] === 0){
+          } else if(resScore.levels[2] === 0){
 
-              log('Load level 3')
-              this.startLevel3()
+            log('Load level 3')
+            this.startLevel3()
 
-            } else {
+          } else {
 
             log('Load levels finish')
             this.levelsFinish()
 
-            }
+          }
 
-          })
-        ])
-      ).catch(error => {
+        })
+      ])
+    ).catch(error => {
 
       log(error.toString() )
       log('Error Load level 1')
@@ -698,7 +700,9 @@ performance!`,
         log('donation', donationAmount)
         this.contractOperation.donation(donationAmount).then( () => this.contractOperation.getGoldenAnanasManaBalance()
           .then( (balance) => {
-
+            this.donationProgress.forEach(textEntity => {
+              textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
+            })
             this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, this.jauge.getComponent(Transform).scale.y, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
 
           })
@@ -724,9 +728,12 @@ performance!`,
 
             this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
-              this.jauge.addComponentOrReplace(new utils.Delay(2000, () => {
+              this.jauge.addComponentOrReplace(new utils.Delay(5000, () => {
 
                 this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+                this.donationProgress.forEach(textEntity => {
+                  textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
+                })
 
               }) )
 
@@ -895,12 +902,16 @@ performance!`,
         this.donationBox = getDonationBox(scene)
         this.jauge = getJauge(scene)
         this.lunettes = getLunettes(scene)
+        this.donationProgress = getDonationProgress(scene)
 
         this.donationBox.getComponent(Animator).getClip('donationBoxAction.001').play()
         this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
 
         this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
+          this.donationProgress.forEach(textEntity => {
+            textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
+          })
           this.jauge.addComponentOrReplace(new utils.Delay(5000, () => {
 
             this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
@@ -977,6 +988,9 @@ performance!`,
                 this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
                   this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, this.jauge.getComponent(Transform).scale.y, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+                  this.donationProgress.forEach(textEntity => {
+                    textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
+                  })
 
                 })
 
@@ -1022,7 +1036,9 @@ performance!`,
                     .then( (balance) => {
 
                       this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
-
+                      this.donationProgress.forEach(textEntity => {
+                        textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
+                      })
                     })
                   )
               },
@@ -1042,7 +1058,9 @@ performance!`,
             log('donation', donationAmount)
             this.contractOperation.donation(donationAmount).then( () => this.contractOperation.getGoldenAnanasManaBalance()
               .then( (balance) => {
-
+                this.donationProgress.forEach(textEntity => {
+                  textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
+                })
                 this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, this.jauge.getComponent(Transform).scale.y, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
 
               })
