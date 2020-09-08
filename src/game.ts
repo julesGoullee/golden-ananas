@@ -116,8 +116,7 @@ class Game {
       .then( (network) => {
         this.contractOperation = new ContractOperation(network)
         this.scores = new Scores(this.contractOperation, this.ranks.getComponent(TextShape), userScores)
-      })
-      .then( () => Promise.all([
+      }).then( () => Promise.all([
           this.scores.refreshTopRanks(),
           this.scores.getPlayerScores().then( (resScore: any) => {
 
@@ -155,6 +154,16 @@ class Game {
       log(error.toString() )
       log('Error Load level 1')
       welcomePopup()
+
+      if(!this.contractOperation){
+
+        this.contractOperation = new ContractOperation('local')
+
+      }
+
+      if(!this.scores){
+        this.scores = new Scores(this.contractOperation, this.ranks.getComponent(TextShape), userScores)
+      }
 
       this.buttonStart = getButtonStart(this.pivot)
       this.platforms = getPlatform(this.pivot)
