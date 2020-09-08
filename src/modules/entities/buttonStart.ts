@@ -20,6 +20,11 @@ export default (pivot) => {
 
   const gltfButton = new GLTFShape("models/bouton.glb")
   buttonStart.addComponentOrReplace(gltfButton)
+
+  const clip = new AudioClip('sounds/button.mp3')
+  const source = new AudioSource(clip)
+  buttonStart.addComponent(source)
+
   engine.addEntity(buttonStart)
   buttonStart.addComponentOrReplace(new utils.KeepRotatingComponent(Quaternion.Euler(0, 120, 0)))
 

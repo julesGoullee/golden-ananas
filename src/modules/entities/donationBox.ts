@@ -19,6 +19,7 @@ export default (pivot) => {
     donationBox.getComponent(Animator).addClip(animState)
 
   })
+  gltf.isPointerBlocker = false
 
   engine.addEntity(donationBox)
   return donationBox

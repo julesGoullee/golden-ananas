@@ -38,6 +38,7 @@ export default class LevelOne implements Level {
         e => {
 
           this.buttonStart.getComponent(Animator).getClip('buttonAction').play()
+          this.buttonStart.getComponent(AudioSource).playOnce()
           this.onStart()
           this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
             this.buttonStart.getComponent(Animator).getClip('buttonAction').stop()
@@ -56,6 +57,7 @@ export default class LevelOne implements Level {
       new OnPointerDown(
         e => {
 
+          this.buttonEnd.getComponent(AudioSource).playOnce()
           this.buttonEnd.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonEnd.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
 
             engine.removeEntity(this.buttonEnd)
@@ -65,10 +67,9 @@ export default class LevelOne implements Level {
               platform.addComponentOrReplace(new utils.ScaleTransformComponent(platform.getComponent(Transform).scale, new Vector3(0, 0, 0), 0) )
               this.pivot.addComponentOrReplace(new utils.RotateTransformComponent(this.pivot.getComponent(Transform).rotation, Quaternion.Euler(0, 90, 0), 0) )
 
-              this.onEnd()
-
-
             })
+
+            this.onEnd()
 
           }))
 

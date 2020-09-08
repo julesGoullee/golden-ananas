@@ -41,7 +41,8 @@ export default class LevelThree implements Level {
 
           this.buttonStart.getComponent(Animator).getClip('boutonAction').reset()
           this.buttonStart.getComponent(Animator).getClip('boutonAction').play()
-          this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
+          this.buttonStart.getComponent(AudioSource).playOnce()
+          this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 1, () => {
 
             this.onStart()
             this.start()
@@ -73,7 +74,8 @@ export default class LevelThree implements Level {
         () => {
 
           this.onEnd()
-          this.pineappleSlice.addComponent(new utils.ExpireIn(500) )
+          this.pineappleSlice.getComponent(AudioSource).playOnce()
+          this.pineappleSlice.addComponent(new utils.ExpireIn(1000) )
 
         },
         () => {},

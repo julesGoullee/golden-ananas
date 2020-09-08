@@ -17,7 +17,7 @@
     "@dcl/crypto-utils": "^1.0.12",
     "@dcl/ui-utils": "^1.2.2",
     "decentraland": "^3.4.5-20200907173111.commit-b837c23",
-    "decentraland-ecs": "^6.5.1-20200908154850.commit-f2b3dcd",
+    "decentraland-ecs": "^6.5.1-20200908174052.commit-a360a7e",
     "decentraland-ecs-utils": "^1.1.4"
   },
   "repository": "https://github.com/julesGoullee/golden-ananas",

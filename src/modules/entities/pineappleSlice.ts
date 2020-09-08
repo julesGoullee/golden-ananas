@@ -9,6 +9,11 @@ export default (pivot) => {
   )
   const gltf = new GLTFShape('models/ananasSlice.glb')
   gltf.withCollisions = false
+
+  const clip = new AudioClip('sounds/grabObj.mp3')
+  const source = new AudioSource(clip)
+  pineappleSlice.addComponent(source)
+
   pineappleSlice.addComponentOrReplace(gltf)
   engine.addEntity(pineappleSlice)
 

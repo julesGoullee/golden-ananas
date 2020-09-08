@@ -6,6 +6,7 @@ export default (pivot) => {
     scale: new Vector3(0, 0, 0)
   }) )
   const gltf = new GLTFShape("models/jauge.glb")
+  gltf.isPointerBlocker = false
   jauge.addComponentOrReplace(gltf);
 
   engine.addEntity(jauge)

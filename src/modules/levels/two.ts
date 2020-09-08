@@ -49,6 +49,7 @@ export default class LevelTwo implements Level {
 
           this.buttonStart.getComponent(Animator).getClip('boutonAction').reset()
           this.buttonStart.getComponent(Animator).getClip('boutonAction').play()
+          this.buttonStart.getComponent(AudioSource).playOnce()
           this.buttonStart.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonStart.getComponent(Transform).scale, new Vector3(0, 0, 0), 0.5, () => {
 
             this.onStart()
@@ -70,9 +71,11 @@ export default class LevelTwo implements Level {
       new OnPointerDown(
         e => {
 
-          this.buttonEndKey.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonEndKey.getComponent(Transform).scale, new Vector3(0, 0, 0), 0))
-          engine.removeEntity(this.buttonEndKey)
-          this.onEnd()
+          this.buttonEndKey.getComponent(AudioSource).playOnce()
+          this.buttonEndKey.addComponentOrReplace(new utils.ScaleTransformComponent(this.buttonEndKey.getComponent(Transform).scale, new Vector3(0, 0, 0), 1.5, () => {
+            engine.removeEntity(this.buttonEndKey)
+            this.onEnd()
+          }) )
 
         }, {
           button: ActionButton.POINTER,

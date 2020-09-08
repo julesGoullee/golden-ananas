@@ -6,6 +6,8 @@ export default (pivot) => {
     scale: new Vector3(1, 1, 1)
   }) )
   const gltf = new GLTFShape("models/ananascope.glb")
+  gltf.isPointerBlocker = false
+
   ananascope.addComponentOrReplace(gltf);
   ananascope.addComponentOrReplace(new Animator() );
 

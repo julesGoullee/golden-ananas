@@ -31,6 +31,10 @@ export default (pivot) => {
 
   })
 
+  const clip = new AudioClip('sounds/animUnlock.mp3')
+  const source = new AudioSource(clip)
+  lock.addComponent(source)
+
   engine.addEntity(lock)
   lock.setParent(pivot)
 

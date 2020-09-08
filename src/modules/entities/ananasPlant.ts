@@ -22,6 +22,10 @@ export default (pivot) => {
 
   })
 
+  const clip = new AudioClip('sounds/ananasReduce.mp3')
+  const source = new AudioSource(clip)
+  ananasPlant.addComponent(source)
+
   engine.addEntity(ananasPlant)
   return ananasPlant
 }

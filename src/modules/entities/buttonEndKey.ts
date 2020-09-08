@@ -26,6 +26,10 @@ export default (pivot) => {
 
   })
 
+  const clip = new AudioClip('sounds/grabObj.mp3')
+  const source = new AudioSource(clip)
+  buttonEnd.addComponent(source)
+
   buttonEnd.addComponentOrReplace(gltfButton)
   engine.addEntity(buttonEnd)
 

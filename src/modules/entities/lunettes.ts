@@ -6,6 +6,7 @@ export default (pivot) => {
     scale: new Vector3(1, 1, 1)
   }) )
   const gltf = new GLTFShape("models/lunettes.glb")
+  gltf.isPointerBlocker = false
   lunettes.addComponentOrReplace(gltf);
   lunettes.addComponentOrReplace(new Animator() );
 
