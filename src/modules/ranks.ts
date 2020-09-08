@@ -5,12 +5,12 @@ export default (panneau) => {
   const ranksText = new TextShape('')
   ranksText.font = new Font(Fonts.SanFrancisco_Semibold)
   ranksText.fontSize = 3
-  ranksText.hTextAlign = 'center'
+  ranksText.hTextAlign = 'left'
   ranksText.vTextAlign = 'top'
 
   ranks.addComponentOrReplace(
     new Transform({
-      position: new Vector3(-0.1, 6, -0.1),
+      position: new Vector3(-1.5, 6, -0.1),
       rotation: Quaternion.Euler(0, 0, 0),
     })
   )
