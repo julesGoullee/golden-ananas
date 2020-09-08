@@ -8,7 +8,7 @@ const Config = {
 
     // Ropsten
     '3': {
-      goldenAnanas: '0xe7d94aCE77779AfB9aC6467DEa1839D2277460b2',
+      goldenAnanas: '0xb0f0FE0A407E055Dc0d6C0d66421501975739dEc',
       // manaToken: '0xCEAdf25c74608e8945e44EDb025b7f1F40609787', // fake
       manaToken: '0x2a8Fd99c19271F4F04B1B7b9c4f7cF264b626eDB', // decentraland
     },
