@@ -428,7 +428,7 @@ performance!`,
 
         this.scores.displayUserScores()
         const dialogWindow = new ui.DialogWindow({
-          path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599254946/dialogAnanas_epfecz.png',
+          path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogAnanas_seb9fx.png',
           offsetX: 100,
           offsetY: -20
         }, true)
