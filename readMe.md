@@ -34,7 +34,7 @@ The final idea is to build a game that is scalable and can extend beyond the gam
 - Save each user progression and score, maintain leaderboard top ranks, mint trophies when a player finishes a level as an NFT ERC721, make a donation to support us.  
 Progression can be saved at the end of each level, the user can refuse and batch seamlessly many levels resulting in one Ethereum transaction.
 When you come back on the scene it will automatically load the level to continue where you stopped.  
-Smart contract source repository: [https://github.com/julesGoullee/golden-ananas-contract](https://github.com/julesGoullee/golden-ananas-contract)
+Smart contract source repository: [github.com/julesGoullee/golden-ananas-contract](https://github.com/julesGoullee/golden-ananas-contract)
 
 
 ### The next steps:
@@ -57,4 +57,6 @@ We plan to distribute for each fundraiser contributor a collectible that represe
 ### Let's try it:
 
 ##### Play in standalone on Ethereum ropsten testnet: 
-[https://golden-ananas.vercel.app](https://golden-ananas.vercel.app?DEBUG&ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-13%2C-121&realm=localhost-stub).  
+[golden-ananas.vercel.app](https://golden-ananas.vercel.app?DEBUG&ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-13%2C-121&realm=localhost-stub).  
+
+Note: switch metamask to ropsten network, you can find mana testnet faucet here: [faucet.decentraland.today](https://faucet.decentraland.today) 
