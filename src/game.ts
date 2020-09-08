@@ -126,28 +126,28 @@ class Game {
           this.platforms = getPlatform(this.pivot)
           this.timer = new Timer(this.canvas)
 
-          if(resScore.levels[0] === 0){
-
-            log('Load level 1')
-            welcomePopup()
-            this.startLevel1()
-
-          } else if(resScore.levels[1] === 0){
-
-            log('Load level 2')
-            this.startLevel2()
-
-          } else if(resScore.levels[2] === 0){
+          // if(resScore.levels[0] === 0){
+          //
+          //   log('Load level 1')
+          //   welcomePopup()
+          //   this.startLevel1()
+          //
+          // } else if(resScore.levels[1] === 0){
+          //
+          //   log('Load level 2')
+          //   this.startLevel2()
+          //
+          // } else if(resScore.levels[2] === 0){
 
             log('Load level 3')
             this.startLevel3()
 
-          } else {
-
-            log('Load levels finish')
-            this.levelsFinish()
-
-          }
+          // } else {
+          //
+          //   log('Load levels finish')
+          //   this.levelsFinish()
+          //
+          // }
 
         })
       ])
@@ -725,21 +725,24 @@ performance!`,
 
             this.donationBox = getDonationBox(scene)
             this.jauge = getJauge(scene)
-            this.lunettes = getLunettes(scene)
-            this.donationProgress = getDonationProgress(scene)
 
             this.donationBox.getComponent(Animator).getClip('donationBoxAction.001').play()
-            this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
 
             this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
               this.jauge.addComponentOrReplace(new utils.Delay(5000, () => {
 
                 this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
-                this.donationProgress.forEach(textEntity => {
-                  textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
-                })
+                this.lunettes = getLunettes(scene)
+                this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
 
+                setTimeout(() => {
+                  this.donationProgress = getDonationProgress(scene)
+                  this.donationProgress.forEach(textEntity => {
+                    textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
+                  })
+
+                }, 1000)
               }) )
 
             })
@@ -906,17 +909,21 @@ performance!`,
 
         this.donationBox = getDonationBox(scene)
         this.jauge = getJauge(scene)
-        this.lunettes = getLunettes(scene)
-        this.donationProgress = getDonationProgress(scene)
 
         this.donationBox.getComponent(Animator).getClip('donationBoxAction.001').play()
-        this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
 
         this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
-          this.donationProgress.forEach(textEntity => {
-            textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
-          })
+          this.lunettes = getLunettes(scene)
+          this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
+
+          setTimeout(() => {
+            this.donationProgress = getDonationProgress(scene)
+            this.donationProgress.forEach(textEntity => {
+              textEntity.getComponent(TextShape).value = Math.ceil(balance / Config.manaContributionGoal * 100).toString()
+            })
+          }, 1000)
+
           this.jauge.addComponentOrReplace(new utils.Delay(5000, () => {
 
             this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
@@ -925,6 +932,9 @@ performance!`,
 
           }) )
 
+        }).catch(() => {
+          this.lunettes = getLunettes(scene)
+          this.donationProgress = getDonationProgress(scene)
         })
 
       }) )
@@ -950,11 +960,10 @@ performance!`,
     }) )
     engine.addEntity(donationClick)
 
-    donationClick.addComponentOrReplace(new utils.Delay(1000, () => {
-      donationClick.addComponentOrReplace(new Transform({
-        position: new Vector3(14.5, 0, 14.5),
-        scale: new Vector3(2, 11, 2)
-      }) )
+    donationClick.addComponentOrReplace(new utils.Delay(2000, () => {
+
+      donationClick.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(0, 0, 0), new Vector3(2, 11, 2), 3) )
+
       donationClick.addComponentOrReplace(
         new OnPointerDown(e => {
 

@@ -80,9 +80,9 @@ export default class Scores {
 
   refreshTopRanks(){
 
-    log('refreshTopRanks');
     return this.contractOperation.getTopRanksData()
       .then((ranks) => {
+        log('refreshTopRanks', ranks);
 
         let ranksTextContent = '   PLAYER        SCORE\n'
 
@@ -106,6 +106,7 @@ export default class Scores {
 
   setScoreForLevel(level, time, save){
 
+    log('setScoreForLevel', level, time, save)
     const score = parseInt( (time * 1000).toFixed(0), 10)
 
     if(!this.isFinishScoreLvl[level] || this.scores.levels[level] > score){
