@@ -24,6 +24,8 @@ import getAnanascope from "./modules/entities/ananascope"
 import getLunettes from "./modules/entities/lunettes"
 import getDonationBox from "./modules/entities/donationBox"
 import getJauge from "./modules/entities/jauge"
+import getManaIcon from "./modules/entities/manaIcon"
+import getDonationInput from "./modules/entities/donationInput"
 import welcomePopup from "./modules/welcomePopup"
 
 import Level from "./modules/levels/Level";
@@ -123,28 +125,28 @@ class Game {
             this.platforms = getPlatform(this.pivot)
             this.timer = new Timer(this.canvas)
 
-            if(resScore.levels[0] === 0){
+            // if(resScore.levels[0] === 0){
+            //
+            //   log('Load level 1')
+            //   welcomePopup()
+            //   this.startLevel1()
+            //
+            // } else if(resScore.levels[1] === 0){
+            //
+            //   log('Load level 2')
+            //   this.startLevel2()
+            //
+            // } else if(resScore.levels[2] === 0){
+            //
+            //   log('Load level 3')
+            //   this.startLevel3()
+            //
+            // } else {
 
-              log('Load level 1')
-              welcomePopup()
-              this.startLevel1()
+            log('Load levels finish')
+            this.levelsFinish()
 
-            } else if(resScore.levels[1] === 0){
-
-              log('Load level 2')
-              this.startLevel2()
-
-            } else if(resScore.levels[2] === 0){
-
-              log('Load level 3')
-              this.startLevel3()
-
-            } else {
-
-              log('Load levels finish')
-              this.levelsFinish()
-
-            }
+            // }
 
           })
         ])
@@ -659,36 +661,11 @@ performance!`,
           }
         },
       ]
-      const manaIcon = new UIImage(this.canvas, new Texture('https://res.cloudinary.com/dp7csktyw/image/upload/v1599432750/logoMana_oixe5a.png') )
-      manaIcon.visible = false
-      manaIcon.name = 'mana-icon'
-      manaIcon.width = '48px'
-      manaIcon.height = '48px'
-      manaIcon.positionY = -100
-      manaIcon.positionX = 150
-      manaIcon.sourceWidth = 2000
-      manaIcon.sourceHeight = 2000
-      manaIcon.isPointerBlocker = false
 
       let donationAmount = Config.defaultDonation
-      const donationInput = new UIInputText(this.canvas)
-      donationInput.visible = false
-      donationInput.width = '100px'
-      donationInput.vAlign = 'bottom'
-      donationInput.hAlign = 'center'
-      donationInput.positionY = '200px'
-      donationInput.positionX = '35px'
-      const padding = 10
-      donationInput.paddingTop = padding
-      donationInput.paddingBottom = padding
-      donationInput.paddingLeft = padding
-      donationInput.paddingRight = padding
-      donationInput.vTextAlign = 'center'
-      donationInput.fontSize = 20
-      donationInput.color = Color4.White()
-      donationInput.placeholderColor = Color4.White()
+      const donationInput = getDonationInput(this.canvas)
+      const manaIcon = getManaIcon(this.canvas)
       donationInput.placeholder = donationAmount.toString()
-      donationInput.focusedBackground = Color4.Gray()
 
       donationInput.onChanged = new OnChanged((data: { value: string }) => {
 
@@ -702,7 +679,13 @@ performance!`,
         manaIcon.visible = false
         dialogWindow.openDialogWindow(endDialog, 0)
         log('donation', donationAmount)
-        this.contractOperation.donation(donationAmount)
+        this.contractOperation.donation(donationAmount).then( () => this.contractOperation.getGoldenAnanasManaBalance()
+          .then( (balance) => {
+
+            this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, this.jauge.getComponent(Transform).scale.y, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+
+          })
+        )
       })
 
       const NPCTalk1: Dialog[] = ([
@@ -724,7 +707,11 @@ performance!`,
 
             this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
-              this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
+              this.jauge.addComponentOrReplace(new utils.Delay(2000, () => {
+
+                this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+
+              }) )
 
             })
 
@@ -744,7 +731,6 @@ performance!`,
           ifPressF: 3,
           triggeredByE: () => {
 
-            log('visible true')
             donationInput.visible = true
             manaIcon.visible = true
           },
@@ -770,12 +756,11 @@ performance!`,
               .then( () => this.contractOperation.getGoldenAnanasManaBalance()
                 .then( (balance) => {
 
-                  log('baafegw', balance)
                   if(!this.jauge){
                     this.jauge = getJauge(scene)
                   }
 
-                  this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
+                  this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, this.jauge.getComponent(Transform).scale.y, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
 
                 })
               )
@@ -846,7 +831,6 @@ performance!`,
           },
         }
       ]
-
       dialogWindow.openDialogWindow(NPCTalk, 0)
       this.canvas.visible = true
       this.canvas.isPointerBlocker = true
@@ -874,12 +858,12 @@ performance!`,
 
         if(!this.papyVer){
           this.papyVer = getPapyVer(scene)
-          this.papyVer.getComponent(Animator).getClip('papyPositionLvl3Action').play()
+          this.papyVer.getComponent(Animator).getClip('papyDonationAction').play()
         }
 
         if(!this.ananascope){
           this.ananascope = getAnanascope(scene)
-          this.ananascope.getComponent(Animator).getClip('ananascopePositionLvl3Action').play()
+          this.ananascope.getComponent(Animator).getClip('ananascopeDonationAction').play()
 
         }
         this.scores.displayUserScores()
@@ -893,13 +877,166 @@ performance!`,
 
         this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
 
-          this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+          this.jauge.addComponentOrReplace(new utils.Delay(4000, () => {
+
+            this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+
+            this.donationListenClick()
+
+          }) )
 
         })
 
       }) )
 
     }
+
+  }
+
+  donationListenClick(){
+
+    let isOpen = false
+    this.donationBox.addComponentOrReplace(
+      new OnPointerDown(e => {
+
+        log('click')
+          if(isOpen){
+            return
+          }
+          log('open donation')
+          isOpen = true
+          const dialogWindow = new ui.DialogWindow({
+            path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599492105/lunettes_eocx2s.png',
+            offsetX: -20,
+            height: 150,
+            width: 150,
+            section: {
+              sourceWidth: 456,
+              sourceHeight: 456
+            }
+          }, true)
+          let donationAmount = Config.defaultDonation
+          const manaIcon = getManaIcon(this.canvas)
+          const donationInput = getDonationInput(this.canvas)
+          donationInput.placeholder = donationAmount.toString()
+
+          donationInput.onChanged = new OnChanged((data: { value: string }) => {
+
+            log('onChanged', data.value)
+            donationAmount = parseInt(data.value, 10) || Config.defaultDonation
+
+          })
+
+          const endDialog = [
+            {
+              text: `You can always come back later and click on the Ananascope to donate whenever you want.`,
+              offsetY: -20
+            },
+            {
+              text: `The second way to support us would be to share your feedback, impressions, ideas or issues with us.`,
+              offsetY: -20
+            },
+            {
+              text: `You will find our email address outside the house on the wooden sign. We can't wait to hear what you think!`,
+              offsetY: -20,
+              isEndOfDialog: true,
+              triggeredByNext: () => {
+                isOpen = false
+              }
+            },
+          ]
+
+          const NPCTalk: Dialog[] = ([
+            {
+              text: `Ha! ... Actually no, but I know how you could help me. I would need some pennies to fix my glasses so I can read the Ananascope.`,
+              triggeredByNext: () => {
+
+                this.contractOperation.getGoldenAnanasManaBalance().then( (balance) => {
+
+                  this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, this.jauge.getComponent(Transform).scale.y, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+
+                })
+
+              },
+              offsetY: -40,
+            },
+            {
+              text: `Do you want to make a donation to support this noble quest?`,
+              isQuestion: true,
+              labelE: {
+                label: 'Ok'
+              },
+              labelF: {
+                label: 'No'
+              },
+              ifPressE: 2,
+              ifPressF: 3,
+              triggeredByE: () => {
+
+                donationInput.visible = true
+                manaIcon.visible = true
+              },
+              triggeredByF: () => {}
+            },
+            {
+              text: `Awsome! Select the amount you want to send.`,
+              offsetY: -20,
+              isQuestion: true,
+              labelE: {
+                label: 'Send'
+              },
+              labelF: {
+                label: 'Cancel'
+              },
+              ifPressE: 3,
+              ifPressF: 1,
+              triggeredByE: () => {
+                log('donation', donationAmount)
+                donationInput.visible = false
+                manaIcon.visible = false
+                this.contractOperation.donation(donationAmount)
+                  .then( () => this.contractOperation.getGoldenAnanasManaBalance()
+                    .then( (balance) => {
+
+                      this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 2) )
+
+                    })
+                  )
+              },
+              triggeredByF: () => {
+                donationInput.visible = false
+                manaIcon.visible = false
+              },
+            },
+          ] as Dialog[] ).concat(endDialog)
+
+
+          donationInput.onTextSubmit = new OnTextSubmit((x) => {
+            donationAmount = parseInt(x.text, 10) || Config.defaultDonation
+            donationInput.visible = false
+            manaIcon.visible = false
+            dialogWindow.openDialogWindow(endDialog, 0)
+            log('donation', donationAmount)
+            this.contractOperation.donation(donationAmount).then( () => this.contractOperation.getGoldenAnanasManaBalance()
+              .then( (balance) => {
+
+                this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, this.jauge.getComponent(Transform).scale.y, 1), new Vector3(1, balance / Config.manaContributionGoal + 0.001, 1), 5) )
+
+              })
+            )
+          })
+
+          dialogWindow.openDialogWindow(NPCTalk, 0)
+          this.canvas.visible = true
+          this.canvas.isPointerBlocker = true
+        },
+        {
+          button: ActionButton.POINTER,
+          hoverText: 'Unlock the glasses NFT',
+          showFeedback: true,
+          distance: 2
+        }
+      ) )
   }
 
 }

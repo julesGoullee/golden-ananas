@@ -5,7 +5,7 @@ export default (pivot) => {
     position: new Vector3(8 + 6.55, 0.245, 8 + 6.49),
     scale: new Vector3(0, 0, 0)
   }) )
-  const gltf = new GLTFShape("models/jauge1.glb")
+  const gltf = new GLTFShape("models/jauge.glb")
   jauge.addComponentOrReplace(gltf);
 
   engine.addEntity(jauge)

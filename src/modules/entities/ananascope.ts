@@ -12,6 +12,7 @@ export default (pivot) => {
   [
     'ananascopeAction',
     'ananascopePositionLvl3Action',
+    'ananascopePositionLv4Action',
     'ananascopeDonationAction'
   ].forEach(animationName => {
 

@@ -23,7 +23,7 @@ const Config = {
   countLevels: 3,
   scoreBase: 100000,
   manaContributionGoal: 50000,
-  defaultDonation: 10
+  defaultDonation: 100
 }
 
 export default Config
