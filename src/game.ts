@@ -665,6 +665,7 @@ performance!`,
           isEndOfDialog: true,
           triggeredByNext: () => {
             dialogWindow1.closeDialogWindow()
+            this.donationListenClick()
           }
         },
       ]
@@ -910,7 +911,6 @@ performance!`,
     this.donationBox.addComponentOrReplace(
       new OnPointerDown(e => {
 
-        log('click')
           if(isOpen){
             return
           }
