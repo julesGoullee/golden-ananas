@@ -58,8 +58,3 @@ We plan to distribute for each fundraiser contributor a collectible that represe
 
 ##### Play in standalone on Ethereum ropsten testnet: 
 [https://golden-ananas.vercel.app](https://golden-ananas.vercel.app?DEBUG&ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-13%2C-121&realm=localhost-stub).  
-
-Note: sadly at the date of 7/08/20 the decentraland export sdk have an issue with the metamask connection.  
-If you want to test the blockchain integration you have to pull this repo, and run the dev server on your localhost. (witch  your metamask account to ropsten network).  
-Open in your browser: 
-[http://127.0.0.1:8000/?DEBUG&ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-13%2C-121&realm=localhost-stub](http://127.0.0.1:8000/?DEBUG&ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-13%2C-121&realm=localhost-stub)
