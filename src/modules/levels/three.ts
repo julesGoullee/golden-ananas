@@ -73,6 +73,7 @@ export default class LevelThree implements Level {
         () => {
 
           this.onEnd()
+          this.pineappleSlice.addComponent(new utils.ExpireIn(500) )
 
         },
         () => {},
