@@ -156,9 +156,7 @@ class Game {
       welcomePopup()
 
       if(!this.contractOperation){
-
         this.contractOperation = new ContractOperation('local')
-
       }
 
       if(!this.scores){
