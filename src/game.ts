@@ -139,8 +139,8 @@ class Game {
 
           } else if(resScore.levels[2] === 0){
 
-            // log('Load level 3')
-            // this.startLevel3()
+            log('Load level 3')
+            this.startLevel3()
 
           } else {
 
