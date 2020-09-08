@@ -722,6 +722,7 @@ performance!`,
             this.donationBox = getDonationBox(scene)
             this.jauge = getJauge(scene)
             this.lunettes = getLunettes(scene)
+            this.donationProgress = getDonationProgress(scene)
 
             this.donationBox.getComponent(Animator).getClip('donationBoxAction.001').play()
             this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
