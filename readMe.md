@@ -12,7 +12,7 @@ Try to reach the highest level and win the most glossy pineapple!
 
 Within a week and our knowledge in the [Decentraland](https://decentraland.org) ecosystem, we define our target: build a proof of concept of the gameplay that we want to be simple and easy to understand. 
 Indeed, we keep in mind our experience playing some Decentraland games a few months ago during the public launch, rules were not clear and we wondered: what do I have to do now? We spend so much time on scenes not because it was difficult or the gameplay was challenging, but just because we didn't understand what to do.  
-Thus, we arrived at the conclusion: let's prove we can build an easy to understand the game, with a game flow chained perfectly in Decentraland: simple, small, minimalist, beautiful.  
+Thus, we arrived at the conclusion: let's prove we can build a game easy to understand, with a game flow chained perfectly in Decentraland: simple, small, minimalist, beautiful.  
 
 
 The Decentraland Game Jam theme is Chain Reaction. We think of different interpretations of this theme, and we find that on one hand, the gameplay could be built on a chain reaction logic, and on the other hand, the game could be reacting with the blockchain. In the end, we decided to create a game closely linked to the blockchain.  
@@ -24,8 +24,7 @@ The final idea is to build a game that is scalable and can extend beyond the gam
 
 ### Game concept:
 
-- Platform arcade running game, if you failed you have to restart the whole level.  
-- Platform arcade running game, if you fail, you have to restart the whole level.
+- Platform arcade running game, if you fail, you have to restart the whole level.  
 - Make the best score for each level and get into the competition to be the first at the global leader board.
 - Each level done changes the scene radically, and progress in the whole history.
 - Every (Juicy) 3D models, images, logos are homemade by [@ninja-fire](https://github.com/ninja-fire). Our (messy) moodboard in [figma.com](https://www.figma.com/file/kkYNHc3aGHDSNXKWw6peBi/goldananas?node-id=1%3A2)  
@@ -51,7 +50,7 @@ We plan to distribute for each fundraiser contributor a collectible that represe
 	
 - When all levels are done, allow the player to re-play any levels to increase his score on the leader board.  
 - We put down different gameplay blocks, let's combine them to build much more complex levels.  
-- Integration Matic network.
+-  When ready, integrate Matic network to answer the problem of transaction costs and speed to save the player’s score on the blockchain.
 - Obviously imagine the next chapters of the game!  
 
 ### Let's try it:
@@ -60,3 +59,6 @@ We plan to distribute for each fundraiser contributor a collectible that represe
 [golden-ananas.vercel.app](https://golden-ananas.vercel.app?DEBUG&ENABLE_WEB3&SCENE_DEBUG_PANEL&position=-13%2C-121&realm=localhost-stub).  
 
 Note: switch metamask to ropsten network, you can find mana testnet faucet here: [faucet.decentraland.today](https://faucet.decentraland.today) 
+
+### Credit:
+Sound from [Zapsplat.com](Zapsplat.com)

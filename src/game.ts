@@ -429,8 +429,13 @@ performance!`,
         this.scores.displayUserScores()
         const dialogWindow = new ui.DialogWindow({
           path: 'https://res.cloudinary.com/dp7csktyw/image/upload/v1599421084/dialogAnanas_seb9fx.png',
-          offsetX: 100,
-          offsetY: -20
+          offsetX: -20,
+          height: 150,
+          width: 150,
+          section: {
+            sourceWidth: 512,
+            sourceHeight: 512
+          }
         }, true)
         const NPCTalk: Dialog[] = [
           {
@@ -745,6 +750,25 @@ performance!`,
                 }, 1000)
               }) )
 
+            }).catch( (error) => {
+
+              log(error.toString() )
+              this.jauge.addComponentOrReplace(new utils.Delay(5000, () => {
+
+                this.jauge.addComponentOrReplace(new utils.ScaleTransformComponent(new Vector3(1, 0, 1), new Vector3(1, 0.6, 1), 5) )
+
+                this.lunettes = getLunettes(scene)
+                this.lunettes.getComponent(Animator).getClip('lunettesRotateAction.001').play()
+
+                setTimeout(() => {
+                  this.donationProgress = getDonationProgress(scene)
+                  this.donationProgress.forEach(textEntity => {
+                    textEntity.getComponent(TextShape).value = '60'
+                  })
+
+                }, 1000)
+
+              }))
             })
 
           },
@@ -932,7 +956,8 @@ performance!`,
 
           }) )
 
-        }).catch(() => {
+        }).catch((error) => {
+          log(error.toString() )
           this.lunettes = getLunettes(scene)
           this.donationProgress = getDonationProgress(scene)
         })
